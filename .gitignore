@@ -1,9 +1,6 @@
-*.js
-!jest.config.js
-*.d.ts
-node_modules
-build
-coverage
+**/node_modules
+**/build
+**/coverage
 
 # CDK asset staging directory
 .cdk.staging
