@@ -3,7 +3,7 @@ import {
   matchTemplate,
   MatchStyle,
 } from '@aws-cdk/assert';
-import cdk from '@aws-cdk/core';
+import * as cdk from '@aws-cdk/core';
 import { JCashStack } from './jcash-stack';
 
 it('Empty Stack', () => {
