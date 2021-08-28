@@ -1,4 +1,4 @@
-export const handler = (event?: any, context?: any) => {
+export const handler = async (event?: any, context?: any) => {
   console.log({ event, context });
   return {
     statusCode: 200,
