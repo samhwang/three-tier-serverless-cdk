@@ -1,5 +1,11 @@
 import path from 'path';
-import { Stack, Construct, StackProps, Duration } from '@aws-cdk/core';
+import {
+  Stack,
+  Construct,
+  StackProps,
+  Duration,
+  RemovalPolicy,
+} from '@aws-cdk/core';
 import {
   IResource,
   MockIntegration,
@@ -12,6 +18,8 @@ import {
   NodejsFunction,
   NodejsFunctionProps,
 } from '@aws-cdk/aws-lambda-nodejs';
+import { Bucket } from '@aws-cdk/aws-s3';
+import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
 
 interface FunctionProps {
   handler: string;
@@ -62,6 +70,7 @@ export class JCashStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
+    // LAMBDA CONSTRUCT
     const testLambda = this.getFunctionConstruct({
       handler: 'handler',
       entry: 'handler',
@@ -78,6 +87,21 @@ export class JCashStack extends Stack {
     test.addMethod('GET', testLambdaIntegration);
     test.addMethod('POST', testLambdaIntegration);
     addCorsOptions(test);
+
+    // FE CONSTRUCT
+    const siteBucket = new Bucket(this, 'JCashFEBucket', {
+      bucketName: 'jcash-frontend-bucket',
+      websiteIndexDocument: 'index.html',
+      websiteErrorDocument: 'index.html',
+      publicReadAccess: true,
+      removalPolicy: RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+    });
+
+    new BucketDeployment(this, 'DeployWithInvalidation', {
+      sources: [Source.asset('./src/frontend/build')],
+      destinationBucket: siteBucket,
+    });
   }
 
   getFunctionConstruct({
