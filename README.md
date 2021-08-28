@@ -2,11 +2,36 @@
 
 ## Requirements
 
+- Node 14
+  - Yarn 1.22
+  - Typescript 4.3
+- AWS CDK CLI
+- AWS SAM CLI
+- Docker
+
 ## Setup
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
+### Install
+
 ```shell
+git clone git@github.com:jcakery/jcash.git
+yarn install
+```
+
+### Testing the API Locally
+
+```shell
+cdk synth --no-staging > template.yml
+sam local start-api --port 5000
+```
+
+### Developing the Frontend locally
+
+```shell
+cd src/frontend
+yarn start
 ```
 
 ## Useful commands
