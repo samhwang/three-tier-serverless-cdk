@@ -5,6 +5,10 @@
   "description": "JCash Lambdas",
   "main": "index.js",
   "dependencies": {},
-  "devDependencies": {},
-  "scripts": {}
+  "devDependencies": {
+    "typescript": "4.3.*"
+  },
+  "scripts": {
+    "test": "jest"
+  }
 }
