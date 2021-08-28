@@ -19,7 +19,8 @@
     "test": "jest",
     "lint": "eslint --ext ts,tsx lib bin",
     "format": "yarn lint --fix && prettier --write \"**/*.ts\"",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@aws-cdk/core": "^1.120.0",
@@ -40,7 +41,9 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.4.1",
+    "husky": "^7.0.0",
     "jest": "^27.1.0",
+    "lint-staged": "^11.1.2",
     "prettier": "^2.2.1",
     "ts-jest": "^27.0.4",
     "ts-node": "^10.2.0",
