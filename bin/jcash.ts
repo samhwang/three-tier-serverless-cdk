@@ -3,8 +3,8 @@ import 'source-map-support/register';
 import { App, Tags } from '@aws-cdk/core';
 import { JCashStack } from '../lib/jcash-stack';
 
-const env = process.env.ENV || 'dev';
-const stage = process.env.STAGE || 'dev';
+const env = process.env.ENV || 'prod';
+const stage = process.env.STAGE || 'prod';
 const region = process.env.CDK_DEFAULT_REGION || 'ap-southeast-2';
 const stackName = `JCashStack-${stage}`;
 
