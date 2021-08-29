@@ -18,8 +18,14 @@ import {
   NodejsFunction,
   NodejsFunctionProps,
 } from '@aws-cdk/aws-lambda-nodejs';
-import { Bucket } from '@aws-cdk/aws-s3';
+import { Bucket, CfnBucket } from '@aws-cdk/aws-s3';
 import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
+import {
+  CloudFrontWebDistribution,
+  CloudFrontAllowedMethods,
+  CloudFrontAllowedCachedMethods,
+  ViewerProtocolPolicy,
+} from '@aws-cdk/aws-cloudfront';
 
 interface FunctionProps {
   handler: string;
@@ -97,10 +103,62 @@ export class JCashStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
     });
+    const cfnBucket = siteBucket.node.findChild('Children') as CfnBucket;
+    cfnBucket.addPropertyOverride('CorsConfiguration', {
+      CorsRules: [
+        {
+          AllowedOrigins: ['*'],
+          AllowedMethods: ['HEAD', 'GET', 'PUT', 'POST', 'DELETE'],
+          ExposedHeaders: [
+            'x-amz-server-side-encryption',
+            'x-amz-request-id',
+            'x-amz-id-2',
+          ],
+          AllowedHeaders: ['*'],
+        },
+      ],
+    });
+
+    const cfDistribution = new CloudFrontWebDistribution(
+      this,
+      'JCashFEDistribution',
+      {
+        originConfigs: [
+          {
+            s3OriginSource: {
+              s3BucketSource: siteBucket,
+            },
+            behaviors: [
+              {
+                isDefaultBehavior: true,
+                compress: true,
+                allowedMethods: CloudFrontAllowedMethods.ALL,
+                cachedMethods: CloudFrontAllowedCachedMethods.GET_HEAD_OPTIONS,
+                forwardedValues: {
+                  queryString: true,
+                  cookies: {
+                    forward: 'none',
+                  },
+                  headers: [
+                    'Access-Control-Request-Headers',
+                    'Access-Control-Request-Method',
+                    'Origin',
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+        comment: 'JCashFrontend - CloudFront Distribution',
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      }
+    );
 
     new BucketDeployment(this, 'DeployWithInvalidation', {
       sources: [Source.asset('./src/frontend/build')],
       destinationBucket: siteBucket,
+      distribution: cfDistribution,
+      distributionPaths: ['/*'],
     });
   }
 
