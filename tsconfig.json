@@ -24,8 +24,8 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "outDir": "./build",
+    "outDir": "./build"
   },
-  "exclude": ["node_modules", "cdk.out", "./build", "*.test.*"],
+  "exclude": ["node_modules", "cdk.out", "./build", "*.test.*", "*.config.*"],
   "include": ["./bin", "./lib", "./src"]
 }
