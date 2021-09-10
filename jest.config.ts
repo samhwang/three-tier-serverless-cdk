@@ -5,7 +5,7 @@ const config: Config.InitialOptions = {
   verbose: true,
   collectCoverage: true,
   testEnvironment: 'node',
-  testMatch: ['**/*.test.ts'],
+  testMatch: ['**/*.test.ts', '**/*.test.tsx'],
 };
 
 export default config;
