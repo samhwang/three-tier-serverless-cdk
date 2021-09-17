@@ -1,5 +1,5 @@
 import { Construct, RemovalPolicy, Stack } from '@aws-cdk/core';
-import { Bucket, CfnBucket, IBucket } from '@aws-cdk/aws-s3';
+import { Bucket } from '@aws-cdk/aws-s3';
 import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
 import {
   CloudFrontWebDistribution,
@@ -21,7 +21,6 @@ export default class JCashFEConstruct extends Construct {
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
     });
-    JCashFEConstruct.enableCorsOnBucket(siteBucket);
 
     const cfDistribution = new CloudFrontWebDistribution(
       this,
@@ -76,24 +75,6 @@ export default class JCashFEConstruct extends Construct {
       destinationBucket: siteBucket,
       distribution: cfDistribution,
       distributionPaths: ['/*'],
-    });
-  }
-
-  static enableCorsOnBucket(bucket: IBucket) {
-    const cfnBucket = bucket.node.findChild('Resource') as CfnBucket;
-    cfnBucket.addPropertyOverride('CorsConfiguration', {
-      CorsRules: [
-        {
-          AllowedOrigins: ['*'],
-          AllowedMethods: ['HEAD', 'GET', 'PUT', 'POST', 'DELETE'],
-          ExposedHeaders: [
-            'x-amz-server-side-encryption',
-            'x-amz-request-id',
-            'x-amz-id-2',
-          ],
-          AllowedHeaders: ['*'],
-        },
-      ],
     });
   }
 }
