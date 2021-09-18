@@ -1,11 +1,9 @@
 import type { Config } from '@jest/types';
+import baseConfig from './jest.config.base';
 
 const config: Config.InitialOptions = {
-  preset: 'ts-jest',
-  verbose: true,
-  collectCoverage: true,
-  testEnvironment: 'node',
-  testMatch: ['**/*.test.ts', '**/*.test.tsx'],
+  ...baseConfig,
+  projects: ['<rootDir>', '<rootDir>/src/*'],
 };
 
 export default config;
