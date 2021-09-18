@@ -9,6 +9,7 @@
     "typescript": "4.3.*"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint --ext ts ."
   }
 }
