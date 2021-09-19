@@ -4,3 +4,4 @@ build
 coverage
 cdk.out
 .cdk.staging
+*.d.ts
