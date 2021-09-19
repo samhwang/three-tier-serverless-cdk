@@ -1,34 +1,21 @@
+import path from 'path';
 import fastify from 'fastify';
 import mercurius from 'mercurius';
-import { gql } from 'mercurius-codegen';
+import { makeSchema } from 'nexus';
+import * as types from './graphql';
+
+const schema = makeSchema({
+  types,
+  outputs: {
+    schema: path.join(__dirname, './schema.graphql'),
+    typegen: path.join(__dirname, './schema-types.d.ts'),
+  },
+});
 
 const server = fastify();
 
-const schema = gql`
-  type Query {
-    hello: HelloType
-  }
-
-  type HelloType {
-    message: String!
-    success: Boolean!
-    errors: [String]!
-  }
-`;
-
-const resolvers = {
-  Query: {
-    hello: async () => ({
-      message: 'Hello World',
-      success: true,
-      errors: [],
-    }),
-  },
-};
-
 server.register(mercurius, {
   schema,
-  resolvers,
   graphiql: true,
 });
 
