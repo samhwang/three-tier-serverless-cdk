@@ -1,9 +1,10 @@
 import fastify from 'fastify';
 import mercurius from 'mercurius';
+import { gql } from 'mercurius-codegen';
 
 const server = fastify();
 
-const schema = `
+const schema = gql`
   type Query {
     hello: HelloType
   }
