@@ -19,6 +19,7 @@
   },
   "scripts": {
     "test": "jest",
-    "lint": "eslint --ext ts ."
+    "lint": "eslint --ext ts .",
+    "prisma:gen": "npx prisma generate"
   }
 }

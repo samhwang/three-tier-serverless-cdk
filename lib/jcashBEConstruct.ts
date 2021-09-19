@@ -54,6 +54,24 @@ export default class JCashBEConstruct extends Construct {
       timeout: Duration.seconds(30),
       memorySize: 256,
       depsLockFilePath: path.resolve(__dirname, '../yarn.lock'),
+      bundling: {
+        nodeModules: ['prisma', '@prisma/client'],
+        commandHooks: {
+          beforeBundling(): string[] {
+            return [];
+          },
+          beforeInstall(_: string, outputDir: string) {
+            return [`cp -R ../prisma ${outputDir}/`];
+          },
+          afterBundling(_: string, outputDir: string) {
+            return [
+              `cd ${outputDir}`,
+              `yarn prisma:gen`,
+              `rm -rf node_modules/@prisma/engines`,
+            ];
+          },
+        },
+      },
       ...options,
     });
   }
