@@ -23,22 +23,48 @@ export default class JCashBEConstruct extends Construct {
   constructor(parent: Stack, name: string) {
     super(parent, name);
 
-    const testLambda = this.getFunctionConstruct({
+    const graphqlAPILambda = this.getFunctionConstruct({
       handler: 'handler',
       entry: 'handler',
+      options: {
+        functionName: `jcash-graphqlAPILambda-${process.env.ENV}`,
+        bundling: {
+          nodeModules: ['prisma', '@prisma/client'],
+          commandHooks: {
+            beforeBundling(): string[] {
+              return [];
+            },
+            beforeInstall(inputDir: string, outputDir: string) {
+              const prismaPath = path.join(inputDir, 'src/lambda/prisma');
+              return [`cp -R ${prismaPath}/ ${outputDir}/`];
+            },
+            afterBundling(_inputDir: string, outputDir: string) {
+              return [
+                `cd ${outputDir}`,
+                `npx prisma generate`,
+                `rm -rf node_modules/@prisma/engines node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
+              ];
+            },
+          },
+        },
+      },
     });
 
-    const testLambdaIntegration = new LambdaIntegration(testLambda);
+    const lambdaIntegration = new LambdaIntegration(graphqlAPILambda);
 
     const api = new RestApi(this, 'JCashAPI', {
       restApiName: 'JCash API',
       description: 'The JCash API Service',
     });
 
-    const test = api.root.addResource('test');
-    test.addMethod('GET', testLambdaIntegration);
-    test.addMethod('POST', testLambdaIntegration);
-    JCashBEConstruct.addCorsOptions(test);
+    const endpoint = api.root.addResource('graphql');
+    endpoint.addMethod('GET', lambdaIntegration);
+    endpoint.addMethod('POST', lambdaIntegration);
+    JCashBEConstruct.addCorsOptions(endpoint);
+
+    const playgroundEndpoint = api.root.addResource('graphiql');
+    playgroundEndpoint.addMethod('GET', lambdaIntegration);
+    JCashBEConstruct.addCorsOptions(playgroundEndpoint);
   }
 
   getFunctionConstruct({
@@ -54,23 +80,8 @@ export default class JCashBEConstruct extends Construct {
       timeout: Duration.seconds(30),
       memorySize: 256,
       depsLockFilePath: path.resolve(__dirname, '../yarn.lock'),
-      bundling: {
-        nodeModules: ['prisma', '@prisma/client'],
-        commandHooks: {
-          beforeBundling(): string[] {
-            return [];
-          },
-          beforeInstall(_: string, outputDir: string) {
-            return [`cp -R ../prisma ${outputDir}/`];
-          },
-          afterBundling(_: string, outputDir: string) {
-            return [
-              `cd ${outputDir}`,
-              `yarn prisma:gen`,
-              `rm -rf node_modules/@prisma/engines`,
-            ];
-          },
-        },
+      environment: {
+        ENV: process.env.ENV || '',
       },
       ...options,
     });
