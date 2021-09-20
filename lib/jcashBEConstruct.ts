@@ -29,20 +29,29 @@ export default class JCashBEConstruct extends Construct {
       options: {
         functionName: `jcash-graphqlAPILambda-${process.env.ENV}`,
         bundling: {
-          nodeModules: ['prisma', '@prisma/client'],
+          minify: true,
+          sourceMap: true,
+          nodeModules: ['@prisma/client'],
           commandHooks: {
             beforeBundling(): string[] {
               return [];
             },
-            beforeInstall(inputDir: string, outputDir: string) {
-              const prismaPath = path.join(inputDir, 'src/lambda/prisma');
-              return [`cp -R ${prismaPath}/ ${outputDir}/`];
+            beforeInstall(): string[] {
+              return [];
             },
-            afterBundling(_inputDir: string, outputDir: string) {
+            afterBundling(inputDir: string, outputDir: string) {
+              const schemaPath = path.join(
+                inputDir,
+                'src/lambda/src/schema.graphql'
+              );
+              const prismaPath = path.join(inputDir, 'src/lambda/prisma');
               return [
+                `cp -R ${prismaPath}/ ${outputDir}/`,
+                `cp ${schemaPath} ${outputDir}/`,
                 `cd ${outputDir}`,
                 `npx prisma generate`,
                 `rm -rf node_modules/@prisma/engines node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
+                '',
               ];
             },
           },
@@ -82,6 +91,10 @@ export default class JCashBEConstruct extends Construct {
       depsLockFilePath: path.resolve(__dirname, '../yarn.lock'),
       environment: {
         ENV: process.env.ENV || '',
+      },
+      bundling: {
+        minify: true,
+        sourceMap: true,
       },
       ...options,
     });
