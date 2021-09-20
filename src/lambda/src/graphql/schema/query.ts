@@ -1,4 +1,5 @@
 import { queryType, objectType, list, nonNull } from 'nexus';
+import { hello } from '../resolver/hello';
 
 const HelloType = objectType({
   name: 'HelloType',
@@ -15,15 +16,13 @@ const HelloType = objectType({
   },
 });
 
-export const Query = queryType({
+const Query = queryType({
   definition(t) {
     t.field('hello', {
       type: HelloType,
-      resolve: () => ({
-        message: 'Hello World',
-        success: true,
-        errors: [],
-      }),
+      resolve: hello,
     });
   },
 });
+
+export default Query;
