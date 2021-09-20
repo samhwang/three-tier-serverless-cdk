@@ -6,7 +6,7 @@ import * as types from './graphql';
 
 const schema = makeSchema({
   types,
-  outputs: {
+  outputs: !process.env.ENV && {
     schema: path.join(__dirname, './schema.graphql'),
     typegen: path.join(__dirname, './schema-types.d.ts'),
   },
@@ -17,6 +17,7 @@ const server = fastify();
 server.register(mercurius, {
   schema,
   graphiql: true,
+  ide: true,
 });
 
 server.setNotFoundHandler((_, reply) =>
