@@ -21,6 +21,12 @@
     "lint": "eslint --ext ts,tsx lib bin src",
     "format": "yarn lint --fix && prettier --write \"**/*.ts\" \"**/*.tsx\"",
     "cdk": "cdk",
+    "deploy": "cdk deploy",
+    "deploy:dev": "ENV=dev yarn deploy",
+    "deploy:prod": "ENV=prod yarn deploy",
+    "destroy": "cdk destroy",
+    "destroy:dev": "ENV=dev yarn destroy",
+    "destroy:prod": "ENV=prod yarn destroy",
     "prepare": "husky install"
   },
   "dependencies": {
