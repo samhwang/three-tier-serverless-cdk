@@ -6,8 +6,8 @@ const server = fastify();
 
 server.register(mercurius, {
   schema,
-  graphiql: true,
-  ide: true,
+  graphiql: false,
+  ide: false,
 });
 
 server.setNotFoundHandler((_, reply) =>

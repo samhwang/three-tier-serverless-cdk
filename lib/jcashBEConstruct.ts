@@ -25,7 +25,7 @@ export default class JCashBEConstruct extends Construct {
         bundling: {
           minify: true,
           sourceMap: true,
-          nodeModules: ['@prisma/client'],
+          nodeModules: ['readable-stream', '@prisma/client'],
           commandHooks: {
             beforeBundling(): string[] {
               return [];
@@ -45,7 +45,6 @@ export default class JCashBEConstruct extends Construct {
                 `cd ${outputDir}`,
                 `npx prisma generate`,
                 `rm -rf node_modules/@prisma/engines node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
-                '',
               ];
             },
           },
