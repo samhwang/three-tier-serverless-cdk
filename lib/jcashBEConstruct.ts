@@ -1,12 +1,6 @@
 import path from 'path';
 import { Stack, Construct, Duration } from '@aws-cdk/core';
-import {
-  IResource,
-  MockIntegration,
-  LambdaIntegration,
-  PassthroughBehavior,
-  RestApi,
-} from '@aws-cdk/aws-apigateway';
+import { LambdaRestApi } from '@aws-cdk/aws-apigateway';
 import { Runtime } from '@aws-cdk/aws-lambda';
 import {
   NodejsFunction,
@@ -59,21 +53,12 @@ export default class JCashBEConstruct extends Construct {
       },
     });
 
-    const lambdaIntegration = new LambdaIntegration(graphqlAPILambda);
-
-    const api = new RestApi(this, 'JCashAPI', {
+    new LambdaRestApi(this, 'JCashAPI', {
       restApiName: 'JCash API',
       description: 'The JCash API Service',
+      handler: graphqlAPILambda,
+      proxy: true,
     });
-
-    const endpoint = api.root.addResource('graphql');
-    endpoint.addMethod('GET', lambdaIntegration);
-    endpoint.addMethod('POST', lambdaIntegration);
-    JCashBEConstruct.addCorsOptions(endpoint);
-
-    const playgroundEndpoint = api.root.addResource('graphiql');
-    playgroundEndpoint.addMethod('GET', lambdaIntegration);
-    JCashBEConstruct.addCorsOptions(playgroundEndpoint);
   }
 
   getFunctionConstruct({
@@ -98,44 +83,5 @@ export default class JCashBEConstruct extends Construct {
       },
       ...options,
     });
-  }
-
-  static addCorsOptions(apiResource: IResource) {
-    apiResource.addMethod(
-      'OPTIONS',
-      new MockIntegration({
-        integrationResponses: [
-          {
-            statusCode: '200',
-            responseParameters: {
-              'method.response.header.Access-Control-Allow-Headers':
-                "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-              'method.response.header.Access-Control-Allow-Origin': "'*'",
-              'method.response.header.Access-Control-Allow-Credentials':
-                "'false'",
-              'method.response.header.Access-Control-Allow-Methods':
-                "'OPTIONS,GET,PUT,POST,DELETE'",
-            },
-          },
-        ],
-        passthroughBehavior: PassthroughBehavior.NEVER,
-        requestTemplates: {
-          'application/json': '{"statusCode": 200}',
-        },
-      }),
-      {
-        methodResponses: [
-          {
-            statusCode: '200',
-            responseParameters: {
-              'method.response.header.Access-Control-Allow-Headers': true,
-              'method.response.header.Access-Control-Allow-Methods': true,
-              'method.response.header.Access-Control-Allow-Credentials': true,
-              'method.response.header.Access-Control-Allow-Origin': true,
-            },
-          },
-        ],
-      }
-    );
   }
 }
