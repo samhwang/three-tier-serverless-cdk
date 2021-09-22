@@ -34,6 +34,5 @@
     "*.test.*",
     "*.config.*",
     "*.d.ts"
-  ],
-  "include": ["src"]
+  ]
 }
