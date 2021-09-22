@@ -1,40 +1,25 @@
-import { FC, useState, useEffect } from 'react';
-import fetchGraphQL from './fetchGraphQL';
+import { FC } from 'react';
+import { graphql } from 'babel-plugin-relay/macro';
+import { useLazyLoadQuery } from 'react-relay/hooks';
+import { AppHelloQuery } from './__generated__/AppHelloQuery.graphql';
+
+const HelloQuery = graphql`
+    query AppHelloQuery {
+        hello {
+            message
+            success
+            errors
+        }
+    }
+`;
 
 const App: FC = () => {
-    const [message, setMessage] = useState<string>('');
-
-    useEffect(() => {
-        let isMounted = true;
-        fetchGraphQL(`
-        query HelloQuery {
-            hello {
-                message
-                success
-                errors
-            }
-        }
-        `)
-            .then((response) => {
-                if (!isMounted) {
-                    return;
-                }
-
-                const { message } = response.data.hello;
-                setMessage(message);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    const data = useLazyLoadQuery<AppHelloQuery>(HelloQuery, {});
+    const message = data.hello?.message;
 
     return (
         <div>
-            <p>{message !== '' ? message : 'Loading...'}</p>
+            <p>{message}</p>
         </div>
     );
 };
