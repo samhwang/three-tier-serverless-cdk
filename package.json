@@ -4,7 +4,7 @@
   "author": "JCakery",
   "private": true,
   "workspaces": [
-    "src/**/*"
+    "packages/**/*"
   ],
   "bin": {
     "jcash": "bin/jcash.js"

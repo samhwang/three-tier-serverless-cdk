@@ -71,7 +71,7 @@ export default class JCashFEConstruct extends Construct {
     );
 
     new BucketDeployment(this, 'DeployWithInvalidation', {
-      sources: [Source.asset('./src/frontend/build')],
+      sources: [Source.asset('./packages/frontend/build')],
       destinationBucket: siteBucket,
       distribution: cfDistribution,
       distributionPaths: ['/*'],

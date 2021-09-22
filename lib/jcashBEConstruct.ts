@@ -68,7 +68,7 @@ export default class JCashBEConstruct extends Construct {
     return new NodejsFunction(this, handler, {
       runtime: Runtime.NODEJS_14_X,
       functionName: `jcash-${handler}-${process.env.ENV}`,
-      entry: path.resolve(__dirname, `../src/lambda/src/${entry}.ts`),
+      entry: path.resolve(__dirname, `../packages/lambda/src/${entry}.ts`),
       handler,
       timeout: Duration.seconds(30),
       memorySize: 256,
