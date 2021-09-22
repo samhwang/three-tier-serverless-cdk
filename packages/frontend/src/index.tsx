@@ -1,11 +1,17 @@
-import { StrictMode } from 'react';
+import { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom';
+import { RelayEnvironmentProvider } from 'react-relay';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import RelayEnvironment from './RelayEnvironment';
 
 ReactDOM.render(
     <StrictMode>
-        <App />
+        <RelayEnvironmentProvider environment={RelayEnvironment}>
+            <Suspense fallback="loading...">
+                <App />
+            </Suspense>
+        </RelayEnvironmentProvider>
     </StrictMode>,
     document.getElementById('root')
 );
