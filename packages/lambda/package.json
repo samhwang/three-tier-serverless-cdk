@@ -25,6 +25,7 @@
         "lint": "eslint --ext ts .",
         "start": "tsnd --poll --transpile-only --no-notify ./src/app.ts",
         "prisma:gen": "npx prisma generate",
-        "nexus:gen": "ts-node src/graphql/index.ts"
+        "nexus:gen": "ts-node src/graphql/index.ts",
+        "build": "tsc"
     }
 }
