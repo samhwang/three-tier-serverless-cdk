@@ -11,10 +11,17 @@ import JCashBEConstruct from './jcashBEConstruct';
 import JCashFEConstruct from './jcashFEConstruct';
 
 export class JCashStack extends Stack {
-    constructor(scope: Construct, id: string, props?: StackProps) {
+    constructor(scope: Construct, id: string, props: StackProps) {
         super(scope, id, props);
-        new JCashBEConstruct(this, 'JCashBE');
-        const FEConstruct = new JCashFEConstruct(this, 'JCashFE');
+
+        const stage = props.tags?.stage || 'dev';
+
+        new JCashBEConstruct(this, `JCashBE-${stage}`, {
+            stage,
+        });
+        const FEConstruct = new JCashFEConstruct(this, `JCashFE-${stage}`, {
+            stage,
+        });
         const FEBucket = FEConstruct.bucket;
 
         const cfDistribution = new CloudFrontWebDistribution(
