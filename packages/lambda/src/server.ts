@@ -14,6 +14,7 @@ server.register(mercurius, {
     schema,
     graphiql: false,
     ide: false,
+    path: '/api/graphql',
 });
 
 server.setNotFoundHandler((_, reply) =>
