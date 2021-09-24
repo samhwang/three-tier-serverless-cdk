@@ -21,7 +21,7 @@
     "test:frontend": "yarn workspace @jcakery/jcash-frontend run test",
     "test:backend": "yarn workspace @jcakery/jcash-lambda run test",
     "test:packages": "yarn workspaces run test",
-    "lint": "eslint --ext ts,tsx lib bin src",
+    "lint": "eslint --ext ts,tsx lib bin packages",
     "format": "yarn lint --fix && prettier --write \"**/*.ts\" \"**/*.tsx\"",
     "deploy:dev": "ENV=dev cdk deploy",
     "deploy:prod": "ENV=prod cdk deploy",
