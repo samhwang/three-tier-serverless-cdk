@@ -6,6 +6,7 @@ import {
     NodejsFunction,
     NodejsFunctionProps,
 } from '@aws-cdk/aws-lambda-nodejs';
+import { ConstructProps } from './interface';
 
 interface FunctionProps {
     handler: string;
@@ -14,14 +15,20 @@ interface FunctionProps {
 }
 
 export default class JCashBEConstruct extends Construct {
-    constructor(parent: Stack, name: string) {
+    private restApiInstance: LambdaRestApi;
+
+    private stage: string;
+
+    constructor(parent: Stack, name: string, props: ConstructProps) {
         super(parent, name);
+
+        this.stage = props.stage || 'dev';
 
         const graphqlAPILambda = this.getFunctionConstruct({
             handler: 'handler',
             entry: 'handler',
             options: {
-                functionName: `jcash-graphqlAPILambda-${process.env.ENV}`,
+                functionName: `jcash-graphqlAPILambda-${this.stage}`,
                 bundling: {
                     minify: true,
                     sourceMap: true,
@@ -55,12 +62,19 @@ export default class JCashBEConstruct extends Construct {
             },
         });
 
-        new LambdaRestApi(this, 'JCashAPI', {
+        this.restApiInstance = new LambdaRestApi(this, 'JCashAPI', {
             restApiName: 'JCash API',
             description: 'The JCash API Service',
             handler: graphqlAPILambda,
             proxy: true,
+            deployOptions: {
+                stageName: this.stage || 'dev',
+            },
         });
+    }
+
+    get api(): LambdaRestApi {
+        return this.restApiInstance;
     }
 
     getFunctionConstruct({
@@ -70,7 +84,7 @@ export default class JCashBEConstruct extends Construct {
     }: FunctionProps): NodejsFunction {
         return new NodejsFunction(this, handler, {
             runtime: Runtime.NODEJS_14_X,
-            functionName: `jcash-${handler}-${process.env.ENV}`,
+            functionName: `jcash-${handler}-${this.stage}`,
             entry: path.resolve(
                 __dirname,
                 `../packages/lambda/src/${entry}.ts`
