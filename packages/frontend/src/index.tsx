@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { RelayEnvironmentProvider } from 'react-relay';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import RelayEnvironment from './RelayEnvironment';
+import relayEnvironment from './relay/environment';
 
 const render = async () => {
     if (process.env.NODE_ENV === 'development') {
@@ -13,7 +13,7 @@ const render = async () => {
 
     const IndexComponent = (
         <StrictMode>
-            <RelayEnvironmentProvider environment={RelayEnvironment}>
+            <RelayEnvironmentProvider environment={relayEnvironment}>
                 <Suspense fallback="loading...">
                     <App />
                 </Suspense>
