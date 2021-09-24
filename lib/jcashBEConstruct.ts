@@ -43,11 +43,11 @@ export default class JCashBEConstruct extends Construct {
                         afterBundling(inputDir: string, outputDir: string) {
                             const schemaPath = path.join(
                                 inputDir,
-                                'src/lambda/src/schema.graphql'
+                                'packages/lambda/src/schema.graphql'
                             );
                             const prismaPath = path.join(
                                 inputDir,
-                                'src/lambda/prisma'
+                                'packages/lambda/prisma'
                             );
                             return [
                                 `cp -R ${prismaPath}/ ${outputDir}/`,
