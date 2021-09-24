@@ -4,6 +4,9 @@
   "private": true,
   "description": "JCash Frontend",
   "proxy": "http://localhost:5000",
+  "msw": {
+    "workerDirectory": "public"
+  },
   "dependencies": {
     "@craco/craco": "^6.2.0",
     "@testing-library/jest-dom": "^5.11.4",
