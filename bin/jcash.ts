@@ -10,10 +10,10 @@ const stackName = `JCashStack-${stage}`;
 
 const app = new App();
 const jcashStack = new JCashStack(app, stackName, {
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region,
-  },
+    env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region,
+    },
 });
 
 const tags = Tags.of(jcashStack);
