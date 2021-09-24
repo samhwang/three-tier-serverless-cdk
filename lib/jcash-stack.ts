@@ -16,9 +16,10 @@ export class JCashStack extends Stack {
 
         const stage = props.tags?.stage || 'dev';
 
-        new JCashBEConstruct(this, `JCashBE-${stage}`, {
+        const BEConstruct = new JCashBEConstruct(this, `JCashBE-${stage}`, {
             stage,
         });
+        const BEApi = BEConstruct.api;
         const FEConstruct = new JCashFEConstruct(this, `JCashFE-${stage}`, {
             stage,
         });
@@ -26,7 +27,7 @@ export class JCashStack extends Stack {
 
         const cfDistribution = new CloudFrontWebDistribution(
             this,
-            'JCashFEDistribution',
+            'JCashDistribution',
             {
                 originConfigs: [
                     {
@@ -51,6 +52,18 @@ export class JCashStack extends Stack {
                                         'Origin',
                                     ],
                                 },
+                            },
+                        ],
+                    },
+                    {
+                        customOriginSource: {
+                            domainName: `${BEApi.restApiId}.execute-api.${this.region}.${this.urlSuffix}`,
+                            originPath: `/${BEApi.deploymentStage.stageName}`,
+                        },
+                        behaviors: [
+                            {
+                                pathPattern: '/graphql',
+                                allowedMethods: CloudFrontAllowedMethods.ALL,
                             },
                         ],
                     },
