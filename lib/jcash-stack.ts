@@ -62,7 +62,7 @@ export class JCashStack extends Stack {
                         },
                         behaviors: [
                             {
-                                pathPattern: '/graphql',
+                                pathPattern: '/api/*',
                                 allowedMethods: CloudFrontAllowedMethods.ALL,
                             },
                         ],

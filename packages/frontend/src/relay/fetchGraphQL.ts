@@ -4,7 +4,7 @@ const fetchGraphQL = async (
     query: RequestParameters['text'],
     variables: Variables
 ) => {
-    const response = await fetch('/graphql', {
+    const response = await fetch('/api/graphql', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

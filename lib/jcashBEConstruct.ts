@@ -66,10 +66,14 @@ export default class JCashBEConstruct extends Construct {
             restApiName: 'JCash API',
             description: 'The JCash API Service',
             handler: graphqlAPILambda,
-            proxy: true,
+            proxy: false,
             deployOptions: {
                 stageName: this.stage || 'dev',
             },
+        });
+        const apiPath = this.restApiInstance.root.addResource('api');
+        apiPath.addProxy({
+            anyMethod: true,
         });
     }
 
