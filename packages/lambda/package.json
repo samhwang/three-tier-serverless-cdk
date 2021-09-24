@@ -1,30 +1,30 @@
 {
-  "name": "@jcakery/jcash-lambda",
-  "version": "1.0.0",
-  "private": true,
-  "description": "JCash Lambdas",
-  "main": "index.js",
-  "dependencies": {
-    "@prisma/client": "^3.0.2",
-    "aws-lambda-fastify": "^1.7.1",
-    "fastify": "^3.21.3",
-    "fastify-cors": "^6.0.2",
-    "graphql": "^15.5.3",
-    "mercurius": "^8.2.1",
-    "nexus": "^1.1.0",
-    "nexus-plugin-prisma": "^0.35.0"
-  },
-  "devDependencies": {
-    "prisma": "^3.0.2",
-    "relay-compiler": "^12.0.0",
-    "relay-compiler-language-typescript": "^14.1.0",
-    "typescript": "4.3.*"
-  },
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint --ext ts .",
-    "start": "tsnd --poll --transpile-only --no-notify ./src/app.ts",
-    "prisma:gen": "npx prisma generate",
-    "nexus:gen": "ts-node src/graphql/index.ts"
-  }
+    "name": "@jcakery/jcash-lambda",
+    "version": "1.0.0",
+    "private": true,
+    "description": "JCash Lambdas",
+    "main": "index.js",
+    "dependencies": {
+        "@prisma/client": "^3.0.2",
+        "aws-lambda-fastify": "^1.7.1",
+        "fastify": "^3.21.3",
+        "fastify-cors": "^6.0.2",
+        "graphql": "^15.5.3",
+        "mercurius": "^8.2.1",
+        "nexus": "^1.1.0",
+        "nexus-plugin-prisma": "^0.35.0"
+    },
+    "devDependencies": {
+        "prisma": "^3.0.2",
+        "relay-compiler": "^12.0.0",
+        "relay-compiler-language-typescript": "^14.1.0",
+        "typescript": "4.3.*"
+    },
+    "scripts": {
+        "test": "jest",
+        "lint": "eslint --ext ts .",
+        "start": "tsnd --poll --transpile-only --no-notify ./src/app.ts",
+        "prisma:gen": "npx prisma generate",
+        "nexus:gen": "ts-node src/graphql/index.ts"
+    }
 }

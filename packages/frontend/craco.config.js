@@ -1,3 +1,3 @@
 module.exports = {
-  reactScriptsVersion: "react-scripts",
+    reactScriptsVersion: 'react-scripts',
 };
