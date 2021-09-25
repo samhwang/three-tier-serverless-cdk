@@ -9,6 +9,7 @@ import {
 import { ConstructProps } from './interface';
 
 interface FunctionProps {
+    id: string;
     handler: string;
     entry: string;
     options?: NodejsFunctionProps;
@@ -25,6 +26,7 @@ export default class JCashBEConstruct extends Construct {
         this.stage = props.stage || 'dev';
 
         const graphqlAPILambda = this.getFunctionConstruct({
+            id: 'graphqlAPILambda',
             handler: 'handler',
             entry: 'handler',
             options: {
@@ -82,11 +84,12 @@ export default class JCashBEConstruct extends Construct {
     }
 
     getFunctionConstruct({
+        id,
         handler,
         entry,
         options,
     }: FunctionProps): NodejsFunction {
-        return new NodejsFunction(this, handler, {
+        return new NodejsFunction(this, id, {
             runtime: Runtime.NODEJS_14_X,
             functionName: `jcash-${handler}-${this.stage}`,
             entry: path.resolve(
