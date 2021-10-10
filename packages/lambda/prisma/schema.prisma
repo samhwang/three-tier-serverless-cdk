@@ -1,9 +1,16 @@
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+model User {
+    id Int @id @default(autoincrement())
+    username String @unique
+    password String
+    createdAt DateTime @default(now())
 }
