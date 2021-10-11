@@ -6,13 +6,21 @@ import {
     NodejsFunction,
     NodejsFunctionProps,
 } from '@aws-cdk/aws-lambda-nodejs';
-import { Port, SecurityGroup, SubnetType, Vpc } from '@aws-cdk/aws-ec2';
+import {
+    InterfaceVpcEndpoint,
+    InterfaceVpcEndpointAwsService,
+    Port,
+    SecurityGroup,
+    SubnetType,
+    Vpc,
+} from '@aws-cdk/aws-ec2';
 import {
     DatabaseClusterEngine,
     ParameterGroup,
     ServerlessCluster,
     SubnetGroup,
 } from '@aws-cdk/aws-rds';
+import { Effect, PolicyStatement } from '@aws-cdk/aws-iam';
 import { ConstructProps } from './interface';
 
 interface FunctionProps {
@@ -25,10 +33,14 @@ interface FunctionProps {
 export default class JCashBEConstruct extends Construct {
     private restApiInstance: LambdaRestApi;
 
+    private auroraCluster: ServerlessCluster;
+
     private stage: string;
 
     constructor(parent: Stack, name: string, props: ConstructProps) {
         super(parent, name);
+
+        this.stage = props.stage || 'dev';
 
         const vpc = this.generateVPC();
         const securityGroup = this.generateSecurityGroup(vpc);
@@ -40,7 +52,7 @@ export default class JCashBEConstruct extends Construct {
             securityGroup,
         });
 
-        this.stage = props.stage || 'dev';
+        this.getVPCEndpoint({ vpc, securityGroup });
 
         const graphqlAPILambda = this.getFunctionConstruct({
             id: 'graphqlAPILambda',
@@ -100,13 +112,37 @@ export default class JCashBEConstruct extends Construct {
         return this.restApiInstance;
     }
 
+    getLambdaRolePolicy() {
+        return new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: ['secretsmanager:GetSecretValue'],
+            resources: [this.auroraCluster.secret?.secretArn || ''],
+        });
+    }
+
+    getVPCEndpoint({
+        vpc,
+        securityGroup,
+    }: {
+        vpc: Vpc;
+        securityGroup: SecurityGroup;
+    }): InterfaceVpcEndpoint {
+        return new InterfaceVpcEndpoint(this, 'secrets-manager', {
+            service: InterfaceVpcEndpointAwsService.SECRETS_MANAGER,
+            vpc,
+            privateDnsEnabled: true,
+            subnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
+            securityGroups: [securityGroup],
+        });
+    }
+
     getFunctionConstruct({
         id,
         handler,
         entry,
         options,
     }: FunctionProps): NodejsFunction {
-        return new NodejsFunction(this, id, {
+        const lambda = new NodejsFunction(this, id, {
             runtime: Runtime.NODEJS_14_X,
             functionName: `jcash-${handler}-${this.stage}`,
             entry: path.resolve(
@@ -119,6 +155,8 @@ export default class JCashBEConstruct extends Construct {
             depsLockFilePath: path.resolve(__dirname, '../yarn.lock'),
             environment: {
                 ENV: process.env.ENV || 'development',
+                SECRET_ID: this.auroraCluster.secret?.secretArn || '',
+                AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
             },
             bundling: {
                 minify: true,
@@ -126,6 +164,10 @@ export default class JCashBEConstruct extends Construct {
             },
             ...options,
         });
+        const policy = this.getLambdaRolePolicy();
+        lambda.addToRolePolicy(policy);
+
+        return lambda;
     }
 
     generateVPC(): Vpc {
