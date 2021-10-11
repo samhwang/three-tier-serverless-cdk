@@ -1,11 +1,18 @@
 import path from 'path';
-import { Stack, Construct, Duration } from '@aws-cdk/core';
+import { Stack, Construct, Duration, RemovalPolicy } from '@aws-cdk/core';
 import { LambdaRestApi } from '@aws-cdk/aws-apigateway';
 import { Runtime } from '@aws-cdk/aws-lambda';
 import {
     NodejsFunction,
     NodejsFunctionProps,
 } from '@aws-cdk/aws-lambda-nodejs';
+import { Port, SecurityGroup, SubnetType, Vpc } from '@aws-cdk/aws-ec2';
+import {
+    DatabaseClusterEngine,
+    ParameterGroup,
+    ServerlessCluster,
+    SubnetGroup,
+} from '@aws-cdk/aws-rds';
 import { ConstructProps } from './interface';
 
 interface FunctionProps {
@@ -22,6 +29,16 @@ export default class JCashBEConstruct extends Construct {
 
     constructor(parent: Stack, name: string, props: ConstructProps) {
         super(parent, name);
+
+        const vpc = this.generateVPC();
+        const securityGroup = this.generateSecurityGroup(vpc);
+        const subnetGroup = this.generateSubnetGroup(vpc);
+
+        this.auroraCluster = this.generateAuroraCluster({
+            vpc,
+            subnetGroup,
+            securityGroup,
+        });
 
         this.stage = props.stage || 'dev';
 
@@ -101,13 +118,84 @@ export default class JCashBEConstruct extends Construct {
             memorySize: 256,
             depsLockFilePath: path.resolve(__dirname, '../yarn.lock'),
             environment: {
-                ENV: process.env.ENV || '',
+                ENV: process.env.ENV || 'development',
             },
             bundling: {
                 minify: true,
                 sourceMap: true,
             },
             ...options,
+        });
+    }
+
+    generateVPC(): Vpc {
+        return new Vpc(this, 'JCashVPC', {
+            cidr: '10.0.0.0/20',
+            natGateways: 0,
+            maxAzs: 2,
+            enableDnsHostnames: true,
+            enableDnsSupport: true,
+            subnetConfiguration: [
+                {
+                    cidrMask: 22,
+                    name: 'public',
+                    subnetType: SubnetType.PUBLIC,
+                },
+                {
+                    cidrMask: 22,
+                    name: 'private',
+                    subnetType: SubnetType.PRIVATE_ISOLATED,
+                },
+            ],
+        });
+    }
+
+    generateSecurityGroup(vpc: Vpc): SecurityGroup {
+        const securityGroup = new SecurityGroup(this, 'JCash-Security-Group', {
+            vpc,
+            securityGroupName: 'JCash-Security-Group',
+        });
+        securityGroup.addIngressRule(
+            securityGroup,
+            Port.allTraffic(),
+            'allow internal security group access'
+        );
+
+        return securityGroup;
+    }
+
+    generateSubnetGroup(vpc: Vpc): SubnetGroup {
+        return new SubnetGroup(this, 'JCash-RDS-Subnet-Group', {
+            vpc,
+            subnetGroupName: 'JCash-RDS-Subnet-Group',
+            vpcSubnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
+            removalPolicy: RemovalPolicy.DESTROY,
+            description: 'private isolated subnet group for db',
+        });
+    }
+
+    generateAuroraCluster({
+        vpc,
+        subnetGroup,
+        securityGroup,
+    }: {
+        vpc: Vpc;
+        subnetGroup: SubnetGroup;
+        securityGroup: SecurityGroup;
+    }): ServerlessCluster {
+        return new ServerlessCluster(this, 'JCashAuroraCluster', {
+            engine: DatabaseClusterEngine.AURORA_POSTGRESQL,
+            parameterGroup: ParameterGroup.fromParameterGroupName(
+                this,
+                'JCashParameterGroup',
+                'default.aurora-postgresql10'
+            ),
+            defaultDatabaseName: `JCashDB-${this.stage}`,
+            enableDataApi: true,
+            vpc,
+            subnetGroup,
+            securityGroups: [securityGroup],
+            removalPolicy: RemovalPolicy.DESTROY,
         });
     }
 }
