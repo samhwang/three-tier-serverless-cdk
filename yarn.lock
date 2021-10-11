@@ -156,7 +156,7 @@
     "@aws-cdk/custom-resources" "1.128.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-ec2@1.128.0":
+"@aws-cdk/aws-ec2@1.128.0", "@aws-cdk/aws-ec2@^1.127.0":
   version "1.128.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-ec2/-/aws-ec2-1.128.0.tgz#d05dcd184f1b508056e4e4899144228ced89c842"
   integrity sha512-VC7y0d/XvBTNMhkVaqKWyeO7cKeErrNjoYWaPk1SOxw9TPS+xcRo/NF3ED4zSl7zJ9RrJOzrVSx2yAuQXte6EA==
@@ -334,6 +334,23 @@
     "@aws-cdk/core" "1.128.0"
     constructs "^3.3.69"
 
+"@aws-cdk/aws-rds@^1.127.0":
+  version "1.128.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-rds/-/aws-rds-1.128.0.tgz#793db364576761ccb681830e70ba3e4ab60023e2"
+  integrity sha512-VTMFKDHtM1Yk1YAqECE4jwi+URkBPn28a6FLeiD3RFc6tNU2xdtqOcsH2rtC25UAyttq8nGrWHukBz50U8ulzQ==
+  dependencies:
+    "@aws-cdk/aws-cloudwatch" "1.128.0"
+    "@aws-cdk/aws-ec2" "1.128.0"
+    "@aws-cdk/aws-events" "1.128.0"
+    "@aws-cdk/aws-iam" "1.128.0"
+    "@aws-cdk/aws-kms" "1.128.0"
+    "@aws-cdk/aws-logs" "1.128.0"
+    "@aws-cdk/aws-s3" "1.128.0"
+    "@aws-cdk/aws-secretsmanager" "1.128.0"
+    "@aws-cdk/core" "1.128.0"
+    "@aws-cdk/cx-api" "1.128.0"
+    constructs "^3.3.69"
+
 "@aws-cdk/aws-route53-targets@^1.120.0":
   version "1.128.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-route53-targets/-/aws-route53-targets-1.128.0.tgz#07d7f373d93f62cc89a4ed625cfc5c5779d44cb8"
@@ -404,6 +421,28 @@
     "@aws-cdk/aws-events" "1.128.0"
     "@aws-cdk/aws-iam" "1.128.0"
     "@aws-cdk/aws-kms" "1.128.0"
+    "@aws-cdk/core" "1.128.0"
+    "@aws-cdk/cx-api" "1.128.0"
+    constructs "^3.3.69"
+
+"@aws-cdk/aws-sam@1.128.0":
+  version "1.128.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-sam/-/aws-sam-1.128.0.tgz#0052a179cd12a647dc519bb01bdfd33223af0f6c"
+  integrity sha512-AdwOUM8yN5fmQvfKG+W2J0A/byknp3SDJHUDmPEpiadDwfyvOfrRkM8K84vNMp13+BrdrHxVdPiEEpLKzXmIXg==
+  dependencies:
+    "@aws-cdk/core" "1.128.0"
+    constructs "^3.3.69"
+
+"@aws-cdk/aws-secretsmanager@1.128.0":
+  version "1.128.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-secretsmanager/-/aws-secretsmanager-1.128.0.tgz#a32842b68789c876164b589ee183a11d808d48e1"
+  integrity sha512-6yeFa/DP84x9jTOyOfhyxWgNmRMLaQWOTygd9HArTfOpFqp77JEayTNEM5uqjuG8cpn2Fm86NH6zp0drPLj13A==
+  dependencies:
+    "@aws-cdk/aws-ec2" "1.128.0"
+    "@aws-cdk/aws-iam" "1.128.0"
+    "@aws-cdk/aws-kms" "1.128.0"
+    "@aws-cdk/aws-lambda" "1.128.0"
+    "@aws-cdk/aws-sam" "1.128.0"
     "@aws-cdk/core" "1.128.0"
     "@aws-cdk/cx-api" "1.128.0"
     constructs "^3.3.69"
