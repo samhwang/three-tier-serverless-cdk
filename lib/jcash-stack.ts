@@ -15,9 +15,11 @@ export class JCashStack extends Stack {
         super(scope, id, props);
 
         const stage = props.tags?.stage || 'dev';
+        const region = props.env?.region || 'ap-southeast-2';
 
         const BEConstruct = new JCashBEConstruct(this, `JCashBE-${stage}`, {
             stage,
+            region,
         });
         const BEApi = BEConstruct.api;
         const FEConstruct = new JCashFEConstruct(this, `JCashFE-${stage}`, {

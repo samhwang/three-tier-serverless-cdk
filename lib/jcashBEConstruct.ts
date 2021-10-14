@@ -37,10 +37,14 @@ export default class JCashBEConstruct extends Construct {
 
     private stage: string;
 
+    private region: string;
+
     constructor(parent: Stack, name: string, props: ConstructProps) {
         super(parent, name);
 
         this.stage = props.stage || 'dev';
+
+        this.region = props.region || 'ap-southeast-2';
 
         const vpc = this.generateVPC();
         const securityGroup = this.generateSecurityGroup(vpc);
@@ -155,6 +159,7 @@ export default class JCashBEConstruct extends Construct {
             depsLockFilePath: path.resolve(__dirname, '../yarn.lock'),
             environment: {
                 ENV: process.env.ENV || 'development',
+                REGION: this.region || 'ap-southeast-2',
                 SECRET_ID: this.auroraCluster.secret?.secretArn || '',
                 AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
             },
@@ -232,7 +237,7 @@ export default class JCashBEConstruct extends Construct {
                 'JCashParameterGroup',
                 'default.aurora-postgresql10'
             ),
-            defaultDatabaseName: `JCashDB-${this.stage}`,
+            defaultDatabaseName: `JCashDB${this.stage}`,
             enableDataApi: true,
             vpc,
             subnetGroup,

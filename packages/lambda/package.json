@@ -5,6 +5,7 @@
     "description": "JCash Lambdas",
     "main": "index.js",
     "dependencies": {
+        "@aws-sdk/client-secrets-manager": "^3.36.1",
         "@prisma/client": "^3.0.2",
         "aws-lambda-fastify": "^1.7.1",
         "fastify": "^3.21.3",
