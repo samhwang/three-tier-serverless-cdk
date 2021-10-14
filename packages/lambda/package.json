@@ -23,6 +23,8 @@
         "lint": "eslint --ext ts .",
         "start": "tsnd --poll --transpile-only --no-notify ./src/app.ts",
         "prisma:gen": "npx prisma generate",
+        "prisma:migrate": "npx prisma migrate dev",
+        "prisma:save": "yarn prisma:migrate --create-only",
         "nexus:gen": "ts-node src/graphql/index.ts",
         "build": "tsc"
     }
