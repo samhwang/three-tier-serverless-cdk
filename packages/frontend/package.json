@@ -10,10 +10,8 @@
     "dependencies": {
         "@craco/craco": "^6.2.0",
         "@testing-library/jest-dom": "^5.11.4",
-        "@testing-library/react": "^11.1.0",
-        "@testing-library/user-event": "^12.1.10",
-        "@types/jest": "^26.0.15",
-        "@types/node": "^12.0.0",
+        "@testing-library/react": "^12.1.2",
+        "@testing-library/user-event": "^13.3.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-relay": "^11.0.2",
@@ -27,8 +25,7 @@
         "web-vitals": "^1.0.1"
     },
     "devDependencies": {
-        "@types/relay-compiler": "^8.0.1",
-        "@types/relay-config": "^6.0.2",
+        "eslint-config-react-app": "6.0.0",
         "babel-plugin-relay": "^12.0.0",
         "graphql": "^15.6.0",
         "msw": "^0.35.0"
