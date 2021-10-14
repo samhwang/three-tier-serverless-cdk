@@ -9,10 +9,17 @@ import {
 import {
     InterfaceVpcEndpoint,
     InterfaceVpcEndpointAwsService,
+    Peer,
     Port,
     SecurityGroup,
     SubnetType,
     Vpc,
+    Instance,
+    InstanceType,
+    InstanceClass,
+    InstanceSize,
+    MachineImage,
+    OperatingSystemType,
 } from '@aws-cdk/aws-ec2';
 import {
     DatabaseClusterEngine,
@@ -47,16 +54,38 @@ export default class JCashBEConstruct extends Construct {
         this.region = props.region || 'ap-southeast-2';
 
         const vpc = this.generateVPC();
-        const securityGroup = this.generateSecurityGroup(vpc);
+        const publicSecurityGroup = this.generateSecurityGroup(
+            vpc,
+            'JCash-Public-Security-Group'
+        );
+        publicSecurityGroup.addIngressRule(
+            Peer.anyIpv4(),
+            Port.tcp(22),
+            'allow SSH access'
+        );
+        const privateSecurityGroup = this.generateSecurityGroup(
+            vpc,
+            'JCash-Security-Group'
+        );
+        privateSecurityGroup.addIngressRule(
+            privateSecurityGroup,
+            Port.allTraffic(),
+            'allow internal security group access'
+        );
+        privateSecurityGroup.addIngressRule(
+            publicSecurityGroup,
+            Port.tcp(5432),
+            'allow Aurora Serverless Postgres access'
+        );
         const subnetGroup = this.generateSubnetGroup(vpc);
 
         this.auroraCluster = this.generateAuroraCluster({
             vpc,
             subnetGroup,
-            securityGroup,
+            securityGroup: privateSecurityGroup,
         });
 
-        this.getVPCEndpoint({ vpc, securityGroup });
+        this.getVPCEndpoint({ vpc, securityGroup: privateSecurityGroup });
 
         const graphqlAPILambda = this.getFunctionConstruct({
             id: 'graphqlAPILambda',
@@ -109,6 +138,19 @@ export default class JCashBEConstruct extends Construct {
         const apiPath = this.restApiInstance.root.addResource('api');
         apiPath.addProxy({
             anyMethod: true,
+        });
+
+        const machineImage = MachineImage.fromSsmParameter(
+            '/aws/service/canonical/ubuntu/server/focal/stable/current/amd64/hvm/ebs-gp2/ami-id',
+            { os: OperatingSystemType.LINUX }
+        );
+        new Instance(this, 'JCash-Jumpbox', {
+            vpc,
+            securityGroup: publicSecurityGroup,
+            vpcSubnets: { subnetType: SubnetType.PUBLIC },
+            instanceType: InstanceType.of(InstanceClass.T2, InstanceSize.MICRO),
+            machineImage,
+            keyName: this.node.tryGetContext('keyName'),
         });
     }
 
@@ -197,18 +239,11 @@ export default class JCashBEConstruct extends Construct {
         });
     }
 
-    generateSecurityGroup(vpc: Vpc): SecurityGroup {
-        const securityGroup = new SecurityGroup(this, 'JCash-Security-Group', {
+    generateSecurityGroup(vpc: Vpc, securityGroupName: string): SecurityGroup {
+        return new SecurityGroup(this, securityGroupName, {
             vpc,
-            securityGroupName: 'JCash-Security-Group',
+            securityGroupName,
         });
-        securityGroup.addIngressRule(
-            securityGroup,
-            Port.allTraffic(),
-            'allow internal security group access'
-        );
-
-        return securityGroup;
     }
 
     generateSubnetGroup(vpc: Vpc): SubnetGroup {

@@ -3,5 +3,7 @@
     "ap-southeast-2a",
     "ap-southeast-2b",
     "ap-southeast-2c"
-  ]
+  ],
+  "ami:account=060583727797:filters.image-type.0=machine:filters.name.0=ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*:filters.state.0=available:filters.virtualization-type.0=hvm:region=ap-southeast-2": "ami-09f72ad48e9246782",
+  "keyName": "prismaJumpBox"
 }
