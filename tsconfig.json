@@ -8,5 +8,5 @@
         "*.config.*",
         "*.d.ts"
     ],
-    "include": ["./bin", "./lib"]
+    "include": ["./bin/**/*", "./lib/**/*", "./packages/**/*"]
 }
