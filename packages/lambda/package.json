@@ -3,7 +3,6 @@
     "version": "1.0.0",
     "private": true,
     "description": "App Lambdas",
-    "main": "index.js",
     "dependencies": {
         "@aws-sdk/client-secrets-manager": "^3.37.0",
         "@prisma/client": "^3.0.2",
@@ -16,7 +15,8 @@
         "nexus-plugin-prisma": "^0.35.0"
     },
     "devDependencies": {
-        "prisma": "^3.0.2"
+        "prisma": "^3.0.2",
+        "ts-node-dev": "^1.1.8"
     },
     "scripts": {
         "test": "jest",
@@ -25,7 +25,7 @@
         "start": "tsnd --poll --transpile-only --no-notify ./src/app.ts",
         "prisma:gen": "npx prisma generate",
         "prisma:migrate": "npx prisma migrate dev",
-        "prisma:save": "yarn prisma:migrate --create-only",
+        "prisma:save": "npm run prisma:migrate -- --create-only",
         "nexus:gen": "ts-node src/graphql/index.ts",
         "build": "tsc"
     }

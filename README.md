@@ -7,7 +7,7 @@ This template will spin up and bootstrap an application stack on AWS using AWS C
 ## Requirements
 
 - [Node 14](https://nodejs.org/en/download/ "Node URL")
-  - [Yarn 1.22](https://classic.yarnpkg.com/en/docs/install "Yarn URL")
+  - NPM 7 (Usually bundled with Node. If you're not on v7, run `npm install -g npm@7`)
   - [Typescript 4.4](https://www.typescriptlang.org/download "TS URL")
 - AWS Tools
   - [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/cli.html "AWS CDK URL")
@@ -24,23 +24,23 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 ```shell
 git clone git@github.com:samhwang/cdk-ts-node-lambda-react-graphql.git
-yarn install
+npm install
 ```
 
 ### Running the backend lambda locally
 
 ```shell
 cd packages/lambda
-yarn start
+npm run start
 ```
 
 ### Testing the API Locally with SAM (to verify after cdk synth)
 
 ```shell
-yarn synth:dev # For dev stage
+npm run synth:dev # For dev stage
 sam local start-api --port 5000
 
-yarn synth:prod # For prod stage
+npm run synth:prod # For prod stage
 sam local start-api --port 5000
 ```
 
@@ -48,12 +48,12 @@ sam local start-api --port 5000
 
 ```shell
 cd packages/frontend
-yarn start
+npm run start
 ```
 
 ## Useful commands
 
-- `yarn test` perform the jest unit tests
+- `npm run test` perform the jest unit tests
 - `cdk deploy` deploy this stack to your default AWS account/region
 - `cdk diff` compare deployed stack with current state
 - `cdk synth` emits the synthesized CloudFormation template
@@ -61,7 +61,7 @@ yarn start
 ## Build process
 
 ```shell
-yarn build:workspaces
-yarn deploy:dev # To deploy dev stage
-yarn deploy:prod # To deploy prod stage
+npm run build:frontend
+npm run deploy:dev # To deploy dev stage
+npm run deploy:prod # To deploy prod stage
 ```
