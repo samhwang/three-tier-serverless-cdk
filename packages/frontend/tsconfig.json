@@ -1,12 +1,13 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "target": "esnext",
-        "module": "esnext",
-        "lib": ["dom", "dom.iterable", "esnext"],
-        "skipLibCheck": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "useDefineForClassFields": true,
+        "strict": true,
         "noEmit": true,
         "jsx": "react-jsx"
     },
-    "include": ["src"]
+    "include": ["./src", "./utils", "jest.config.ts", "vite.config.ts"]
 }

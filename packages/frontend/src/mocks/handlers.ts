@@ -1,8 +1,8 @@
 import { graphql } from 'msw';
 
-const handlers = [
-    graphql.query('AppHelloQuery', (_, res, ctx) => {
-        return res(
+export const handlers = [
+    graphql.query('AppQuery', (_, res, ctx) =>
+        res(
             ctx.data({
                 hello: {
                     message: 'Hello World',
@@ -10,8 +10,6 @@ const handlers = [
                     errors: [],
                 },
             })
-        );
-    }),
+        )
+    ),
 ];
-
-export default handlers;

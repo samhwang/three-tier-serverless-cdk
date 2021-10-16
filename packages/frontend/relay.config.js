@@ -5,5 +5,4 @@ module.exports = {
     watchman: false,
     language: 'typescript',
     extensions: ['ts', 'tsx'],
-    artifactDirectory: './src/__generated__',
 };

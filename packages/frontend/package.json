@@ -1,47 +1,45 @@
 {
     "name": "@app/frontend",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "private": true,
     "description": "App Frontend",
-    "proxy": "http://localhost:5000",
     "msw": {
         "workerDirectory": "public"
     },
     "dependencies": {
-        "@craco/craco": "^6.3.0",
         "@testing-library/jest-dom": "^5.11.4",
         "@testing-library/react": "^12.1.2",
-        "@testing-library/user-event": "^13.4.1",
+        "@testing-library/user-event": "^13.3.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-relay": "^11.0.2",
-        "@types/relay-runtime": "^12.0.0",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
+        "react": "^17.0.0",
+        "react-dom": "^17.0.0",
         "react-relay": "^12.0.0",
-        "react-scripts": "^4.0.3",
-        "relay-runtime": "^12.0.0",
-        "typescript": "^4.1.2",
-        "web-vitals": "^2.1.2"
+        "relay-runtime": "^12.0.0"
     },
     "devDependencies": {
         "@types/relay-compiler": "^8.0.1",
         "@types/relay-config": "^6.0.2",
+        "@vitejs/plugin-react": "^1.0.0",
         "babel-plugin-relay": "^12.0.0",
-        "eslint-config-react-app": "6.0.0",
-        "graphql": "^15.6.0",
+        "graphql": "^15.6.1",
+        "identity-obj-proxy": "^3.0.0",
         "msw": "^0.35.0",
         "relay-compiler": "^12.0.0",
         "relay-compiler-language-typescript": "^14.1.0",
-        "relay-config": "^12.0.0"
+        "relay-config": "^12.0.0",
+        "typescript": "^4.4.0",
+        "vite": "^2.6.4",
+        "vite-plugin-relay": "^1.0.6"
     },
     "scripts": {
         "relay": "relay-compiler",
-        "start": "npm run relay && craco start",
-        "build": "npm run relay && craco build",
-        "test": "craco test --watchAll=false --coverage",
-        "lint": "eslint --ext ts,tsx src",
+        "dev": "npm run relay && vite",
+        "build": "npm run relay && tsc && vite build",
+        "serve": "vite preview",
+        "lint": "eslint --ext ts,tsx .",
         "format": "prettier --write \"**/*.ts\" \"**/*.tsx\"",
-        "eject": "react-scripts eject"
+        "test": "jest"
     }
 }

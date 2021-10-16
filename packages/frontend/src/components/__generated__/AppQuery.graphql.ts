@@ -4,21 +4,21 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 
-export type AppHelloQueryVariables = {};
-export type AppHelloQueryResponse = {
+export type AppQueryVariables = {};
+export type AppQueryResponse = {
     readonly hello: {
         readonly message: string;
         readonly success: boolean;
         readonly errors: ReadonlyArray<string | null>;
     } | null;
 };
-export type AppHelloQuery = {
-    readonly response: AppHelloQueryResponse;
-    readonly variables: AppHelloQueryVariables;
+export type AppQuery = {
+    readonly response: AppQueryResponse;
+    readonly variables: AppQueryVariables;
 };
 
 /*
-query AppHelloQuery {
+query AppQuery {
   hello {
     message
     success
@@ -67,7 +67,7 @@ const node: ConcreteRequest = (function () {
             argumentDefinitions: [],
             kind: 'Fragment',
             metadata: null,
-            name: 'AppHelloQuery',
+            name: 'AppQuery',
             selections: v0 /*: any*/,
             type: 'Query',
             abstractKey: null,
@@ -76,18 +76,18 @@ const node: ConcreteRequest = (function () {
         operation: {
             argumentDefinitions: [],
             kind: 'Operation',
-            name: 'AppHelloQuery',
+            name: 'AppQuery',
             selections: v0 /*: any*/,
         },
         params: {
-            cacheID: '2a82eb1d752180887ba3d5229b6b6932',
+            cacheID: '638d8026ca91c847649cc275db37a20f',
             id: null,
             metadata: {},
-            name: 'AppHelloQuery',
+            name: 'AppQuery',
             operationKind: 'query',
-            text: 'query AppHelloQuery {\n  hello {\n    message\n    success\n    errors\n  }\n}\n',
+            text: 'query AppQuery {\n  hello {\n    message\n    success\n    errors\n  }\n}\n',
         },
     } as any;
 })();
-(node as any).hash = '96fe8bcbe6e60ff9f0f90cf791d73a20';
+(node as any).hash = '2dd2d9e557f2ed3f922f76fbdbed7d08';
 export default node;

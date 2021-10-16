@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { graphql } from 'babel-plugin-relay/macro';
-import { useLazyLoadQuery } from 'react-relay/hooks';
-import { AppHelloQuery } from './__generated__/AppHelloQuery.graphql';
+import { useLazyLoadQuery, graphql } from 'react-relay';
+import { AppQuery } from './__generated__/AppQuery.graphql';
 
 const HelloQuery = graphql`
-    query AppHelloQuery {
+    query AppQuery {
         hello {
             message
             success
@@ -14,7 +13,7 @@ const HelloQuery = graphql`
 `;
 
 const App: FC = () => {
-    const data = useLazyLoadQuery<AppHelloQuery>(HelloQuery, {});
+    const data = useLazyLoadQuery<AppQuery>(HelloQuery, {});
     const message = data.hello?.message;
 
     return (
