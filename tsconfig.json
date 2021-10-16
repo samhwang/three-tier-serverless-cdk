@@ -2,11 +2,10 @@
     "extends": "./tsconfig.base.json",
     "exclude": [
         "node_modules",
-        "cdk.out",
-        "./build/*",
+        "packages/*/node_modules",
         "*.test.*",
         "*.config.*",
         "*.d.ts"
     ],
-    "include": ["./bin/**/*", "./lib/**/*", "./packages/**/*"]
+    "include": ["./packages"]
 }

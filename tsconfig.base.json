@@ -28,5 +28,11 @@
         "skipLibCheck": true,
         "jsx": "react-jsx"
     },
-    "exclude": ["node_modules", "./build/*", "*.test.*", "*.config.*", "*.d.ts"]
+    "exclude": [
+        "*/node_modules/*",
+        "./build/*",
+        "*.test.*",
+        "*.config.*",
+        "*.d.ts"
+    ]
 }

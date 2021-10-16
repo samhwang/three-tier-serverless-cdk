@@ -1,3 +1,4 @@
+import path from 'path';
 import { Stack, Construct, StackProps } from '@aws-cdk/core';
 import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
 import {
@@ -89,7 +90,7 @@ export class AppStack extends Stack {
         );
 
         new BucketDeployment(this, 'DeployWithInvalidation', {
-            sources: [Source.asset('./packages/frontend/build')],
+            sources: [Source.asset(path.resolve('..', 'frontend', 'build'))],
             destinationBucket: FEBucket,
             distribution: cfDistribution,
             distributionPaths: ['/*'],

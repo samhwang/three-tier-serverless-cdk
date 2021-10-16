@@ -1,4 +1,6 @@
 build
 coverage
 node_modules
+packages/*/node_modules
 *.d.ts
+*.config.ts

@@ -3,7 +3,7 @@ import baseConfig from './jest.config.base';
 
 const config: Config.InitialOptions = {
     ...baseConfig,
-    projects: ['<rootDir>', '<rootDir>/src/*'],
+    projects: ['<rootDir>/packages/**/*'],
 };
 
 export default config;

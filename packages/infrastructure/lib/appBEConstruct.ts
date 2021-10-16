@@ -193,12 +193,20 @@ export default class AppBEConstruct extends Construct {
             functionName: `app-${handler}-${this.stage}`,
             entry: path.resolve(
                 __dirname,
-                `../packages/lambda/src/${entry}.ts`
+                '..',
+                '..',
+                `lambda/src/${entry}.ts`
             ),
             handler,
             timeout: Duration.seconds(30),
             memorySize: 256,
-            depsLockFilePath: path.resolve(__dirname, '../yarn.lock'),
+            depsLockFilePath: path.resolve(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                'yarn.lock'
+            ),
             environment: {
                 ENV: process.env.ENV || 'development',
                 REGION: this.region || 'ap-southeast-2',

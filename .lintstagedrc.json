@@ -6,5 +6,9 @@
     "packages/lambda/**/*.ts": [
         "cd packages/lambda && eslint --cache --fix",
         "prettier --write"
+    ],
+    "packages/infrastructure/**/*.ts": [
+        "cd packages/infrastructure && eslint --cache --fix",
+        "prettier --write"
     ]
 }
