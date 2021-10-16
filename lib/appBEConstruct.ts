@@ -37,7 +37,7 @@ interface FunctionProps {
     options?: NodejsFunctionProps;
 }
 
-export default class JCashBEConstruct extends Construct {
+export default class AppBEConstruct extends Construct {
     private restApiInstance: LambdaRestApi;
 
     private auroraCluster: ServerlessCluster;
@@ -56,7 +56,7 @@ export default class JCashBEConstruct extends Construct {
         const vpc = this.generateVPC();
         const publicSecurityGroup = this.generateSecurityGroup(
             vpc,
-            'JCash-Public-Security-Group'
+            'App-Public-Security-Group'
         );
         publicSecurityGroup.addIngressRule(
             Peer.anyIpv4(),
@@ -65,7 +65,7 @@ export default class JCashBEConstruct extends Construct {
         );
         const privateSecurityGroup = this.generateSecurityGroup(
             vpc,
-            'JCash-Security-Group'
+            'App-Security-Group'
         );
         privateSecurityGroup.addIngressRule(
             privateSecurityGroup,
@@ -92,7 +92,7 @@ export default class JCashBEConstruct extends Construct {
             handler: 'handler',
             entry: 'handler',
             options: {
-                functionName: `jcash-graphqlAPILambda-${this.stage}`,
+                functionName: `app-graphqlAPILambda-${this.stage}`,
                 bundling: {
                     minify: true,
                     sourceMap: true,
@@ -126,9 +126,9 @@ export default class JCashBEConstruct extends Construct {
             },
         });
 
-        this.restApiInstance = new LambdaRestApi(this, 'JCashAPI', {
-            restApiName: 'JCash API',
-            description: 'The JCash API Service',
+        this.restApiInstance = new LambdaRestApi(this, 'AppAPI', {
+            restApiName: 'App API',
+            description: 'The App API Service',
             handler: graphqlAPILambda,
             proxy: false,
             deployOptions: {
@@ -144,7 +144,7 @@ export default class JCashBEConstruct extends Construct {
             '/aws/service/canonical/ubuntu/server/focal/stable/current/amd64/hvm/ebs-gp2/ami-id',
             { os: OperatingSystemType.LINUX }
         );
-        new Instance(this, 'JCash-Jumpbox', {
+        new Instance(this, 'App-Jumpbox', {
             vpc,
             securityGroup: publicSecurityGroup,
             vpcSubnets: { subnetType: SubnetType.PUBLIC },
@@ -190,7 +190,7 @@ export default class JCashBEConstruct extends Construct {
     }: FunctionProps): NodejsFunction {
         const lambda = new NodejsFunction(this, id, {
             runtime: Runtime.NODEJS_14_X,
-            functionName: `jcash-${handler}-${this.stage}`,
+            functionName: `app-${handler}-${this.stage}`,
             entry: path.resolve(
                 __dirname,
                 `../packages/lambda/src/${entry}.ts`
@@ -218,7 +218,7 @@ export default class JCashBEConstruct extends Construct {
     }
 
     generateVPC(): Vpc {
-        return new Vpc(this, 'JCashVPC', {
+        return new Vpc(this, 'AppVPC', {
             cidr: '10.0.0.0/20',
             natGateways: 0,
             maxAzs: 2,
@@ -247,9 +247,9 @@ export default class JCashBEConstruct extends Construct {
     }
 
     generateSubnetGroup(vpc: Vpc): SubnetGroup {
-        return new SubnetGroup(this, 'JCash-RDS-Subnet-Group', {
+        return new SubnetGroup(this, 'App-RDS-Subnet-Group', {
             vpc,
-            subnetGroupName: 'JCash-RDS-Subnet-Group',
+            subnetGroupName: 'App-RDS-Subnet-Group',
             vpcSubnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
             removalPolicy: RemovalPolicy.DESTROY,
             description: 'private isolated subnet group for db',
@@ -265,14 +265,14 @@ export default class JCashBEConstruct extends Construct {
         subnetGroup: SubnetGroup;
         securityGroup: SecurityGroup;
     }): ServerlessCluster {
-        return new ServerlessCluster(this, 'JCashAuroraCluster', {
+        return new ServerlessCluster(this, 'AppAuroraCluster', {
             engine: DatabaseClusterEngine.AURORA_POSTGRESQL,
             parameterGroup: ParameterGroup.fromParameterGroupName(
                 this,
-                'JCashParameterGroup',
+                'AppParameterGroup',
                 'default.aurora-postgresql10'
             ),
-            defaultDatabaseName: `JCashDB${this.stage}`,
+            defaultDatabaseName: `AppDB${this.stage}`,
             enableDataApi: true,
             vpc,
             subnetGroup,

@@ -1,10 +1,14 @@
-# JCash
+# CDK TypeScript Node GraphQL React Template
+
+## The Project
+
+This template will spin up and bootstrap an application stack on AWS using AWS CDK.
 
 ## Requirements
 
 - [Node 14](https://nodejs.org/en/download/ "Node URL")
   - [Yarn 1.22](https://classic.yarnpkg.com/en/docs/install "Yarn URL")
-  - [Typescript 4.3](https://www.typescriptlang.org/download "TS URL")
+  - [Typescript 4.4](https://www.typescriptlang.org/download "TS URL")
 - AWS Tools
   - [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/cli.html "AWS CDK URL")
   - [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html "AWS SAM URL")
@@ -19,7 +23,7 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 ### Install
 
 ```shell
-git clone git@github.com:jcakery/jcash.git
+git clone git@github.com:samhwang/cdk-ts-node-lambda-react-graphql.git
 yarn install
 ```
 

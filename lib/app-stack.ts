@@ -7,29 +7,29 @@ import {
     ViewerProtocolPolicy,
     PriceClass,
 } from '@aws-cdk/aws-cloudfront';
-import JCashBEConstruct from './jcashBEConstruct';
-import JCashFEConstruct from './jcashFEConstruct';
+import AppBEConstruct from './appBEConstruct';
+import AppFEConstruct from './appFEConstruct';
 
-export class JCashStack extends Stack {
+export class AppStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps) {
         super(scope, id, props);
 
         const stage = props.tags?.stage || 'dev';
         const region = props.env?.region || 'ap-southeast-2';
 
-        const BEConstruct = new JCashBEConstruct(this, `JCashBE-${stage}`, {
+        const BEConstruct = new AppBEConstruct(this, `AppBE-${stage}`, {
             stage,
             region,
         });
         const BEApi = BEConstruct.api;
-        const FEConstruct = new JCashFEConstruct(this, `JCashFE-${stage}`, {
+        const FEConstruct = new AppFEConstruct(this, `AppFE-${stage}`, {
             stage,
         });
         const FEBucket = FEConstruct.bucket;
 
         const cfDistribution = new CloudFrontWebDistribution(
             this,
-            'JCashDistribution',
+            'AppDistribution',
             {
                 originConfigs: [
                     {
@@ -82,7 +82,7 @@ export class JCashStack extends Stack {
                         responsePagePath: '/index.html',
                     },
                 ],
-                comment: 'JCash CloudFront Distribution',
+                comment: 'App CloudFront Distribution',
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 priceClass: PriceClass.PRICE_CLASS_ALL,
             }
