@@ -36,6 +36,7 @@
         "build": "yarn relay && craco build",
         "test": "craco test --watchAll=false --coverage",
         "lint": "eslint --ext ts,tsx src",
+        "format": "prettier --write \"**/*.ts\" \"**/*.tsx\"",
         "eject": "react-scripts eject"
     }
 }

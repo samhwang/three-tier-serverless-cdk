@@ -21,6 +21,7 @@
     "scripts": {
         "test": "jest",
         "lint": "eslint --ext ts .",
+        "format": "prettier --write \"**/*.ts\" \"**/*.tsx\"",
         "start": "tsnd --poll --transpile-only --no-notify ./src/app.ts",
         "prisma:gen": "npx prisma generate",
         "prisma:migrate": "npx prisma migrate dev",
