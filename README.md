@@ -4,6 +4,33 @@
 
 This template will spin up and bootstrap an application stack on AWS using AWS CDK.
 
+- Backend
+  - Node TypeScript
+  - Fastify
+  - Mercurius GraphQL Plugin
+  - GraphQL Nexus
+  - Prisma ORM
+- Frontend
+  - React TypeScript
+  - GraphQL Relay
+- Infrastructure
+  - AWS CDK
+  - AWS Aurora Serverless PostgreSQL
+  - AWS EC2 Jumpbox to configure PostgreSQL
+
+## Bootstrapping process
+
+When deployed, this stack will:
+
+- Create a Serverless Aurora cluster, and associated VPCs.
+- Create an EC2 Jumpbox that is attached to said VPCs so that we can connect to the database for migration work.
+- Create a GraphQL Lambda endpoint built from esbuild typescripts.
+- Create a REST API Gateway, having only 1 route `/api`, served by the graphQL Lambda.
+- Create an S3 Bucket with the built React assets, and enable static page hosting.
+- Create a CloudFront Distribution
+  - The `/api` route will be handled by the REST API Gateway
+  - All the other routes (including 404) will be handled by the React App.
+
 ## Requirements
 
 - [Node 14](https://nodejs.org/en/download/ "Node URL")
