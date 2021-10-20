@@ -1,5 +1,6 @@
 import path from 'path';
-import { makeSchema } from 'nexus';
+import { makeSchema, connectionPlugin } from 'nexus';
+import NexusPrismaScalars from 'nexus-prisma/scalars';
 import Query from './schema/query';
 
 const types = {
@@ -7,10 +8,25 @@ const types = {
 };
 
 const schema = makeSchema({
-    types,
-    outputs: !process.env.ENV && {
-        schema: path.join(__dirname, '../schema.graphql'),
-        typegen: path.join(__dirname, '../schema-types.d.ts'),
+    types: {
+        NexusPrismaScalars,
+        ...types,
+    },
+    plugins: [
+        connectionPlugin({
+            disableBackwardPagination: true,
+            strictArgs: true,
+            nonNullDefaults: { output: true },
+        }),
+    ],
+    contextType: {
+        module: path.join(__dirname, 'context', 'index.ts'),
+        export: 'Context',
+    },
+    shouldGenerateArtifacts: !process.env.ENV,
+    outputs: {
+        schema: path.join(__dirname, '..', '/schema.graphql'),
+        typegen: path.join(__dirname, '..', '/schema-types.gen.ts'),
     },
 });
 

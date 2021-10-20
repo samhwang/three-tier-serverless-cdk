@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import fastifyCors from 'fastify-cors';
 import mercurius from 'mercurius';
 import schema from './graphql';
+import { context } from './graphql/context';
 
 const server = fastify();
 
@@ -12,6 +13,7 @@ server.register(fastifyCors, {
 
 server.register(mercurius, {
     schema,
+    context,
     graphiql: false,
     ide: false,
     path: '/api/graphql',

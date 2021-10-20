@@ -14,7 +14,7 @@
         "default-case": "off",
         "import/extensions": ["error", "never"],
         "no-console": "off",
-        "@typescript-eslint/no-unused-vars": ["error"],
+        "@typescript-eslint/no-unused-vars": "off",
         "import/no-extraneous-dependencies": "off",
         "no-use-before-define": ["error", "nofunc"],
         "import/prefer-default-export": "off",
