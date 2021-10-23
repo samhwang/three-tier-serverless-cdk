@@ -36,6 +36,19 @@ scalar Json
         url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf"
     )
 
+interface Node {
+    """
+    Relay ID
+    """
+    id: ID!
+}
+
 type Query {
     hello: HelloType
+    node(id: ID!): Node
 }
+
+"""
+Must and only use for input
+"""
+scalar RelayId

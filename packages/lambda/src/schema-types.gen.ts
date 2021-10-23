@@ -43,6 +43,13 @@ declare global {
             fieldName: FieldName,
             opts?: core.CommonInputFieldConfig<TypeName, FieldName>
         ): void; // "Json";
+        /**
+         * Must and only use for input
+         */
+        relayId<FieldName extends string>(
+            fieldName: FieldName,
+            opts?: core.CommonInputFieldConfig<TypeName, FieldName>
+        ): void; // "RelayId";
     }
 }
 declare global {
@@ -84,6 +91,13 @@ declare global {
             ...opts: core.ScalarOutSpread<TypeName, FieldName>
         ): void; // "Json";
         /**
+         * Must and only use for input
+         */
+        relayId<FieldName extends string>(
+            fieldName: FieldName,
+            ...opts: core.ScalarOutSpread<TypeName, FieldName>
+        ): void; // "RelayId";
+        /**
          * Adds a Relay-style connection to the type, with numerous options for configuration
          *
          * @see https://nexusjs.org/docs/plugins/connection
@@ -117,6 +131,7 @@ export interface NexusGenScalars {
     DateTime: any;
     Decimal: any;
     Json: any;
+    RelayId: any;
 }
 
 export interface NexusGenObjects {
@@ -129,11 +144,13 @@ export interface NexusGenObjects {
     Query: {};
 }
 
-export interface NexusGenInterfaces {}
+export interface NexusGenInterfaces {
+    Node: any;
+}
 
 export interface NexusGenUnions {}
 
-export type NexusGenRootTypes = NexusGenObjects;
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects;
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars;
 
@@ -147,6 +164,11 @@ export interface NexusGenFieldTypes {
     Query: {
         // field return type
         hello: NexusGenRootTypes['HelloType'] | null; // HelloType
+        node: NexusGenRootTypes['Node'] | null; // Node
+    };
+    Node: {
+        // field return type
+        id: string; // ID!
     };
 }
 
@@ -160,10 +182,22 @@ export interface NexusGenFieldTypeNames {
     Query: {
         // field return type name
         hello: 'HelloType';
+        node: 'Node';
+    };
+    Node: {
+        // field return type name
+        id: 'ID';
     };
 }
 
-export interface NexusGenArgTypes {}
+export interface NexusGenArgTypes {
+    Query: {
+        node: {
+            // args
+            id: string; // ID!
+        };
+    };
+}
 
 export interface NexusGenAbstractTypeMembers {}
 
@@ -175,7 +209,7 @@ export type NexusGenInputNames = never;
 
 export type NexusGenEnumNames = never;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -183,7 +217,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = 'Node';
 
 export type NexusGenFeaturesConfig = {
     abstractTypeStrategies: {
