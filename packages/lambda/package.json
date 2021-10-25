@@ -15,6 +15,7 @@
         "nexus-plugin-prisma": "^0.35.0"
     },
     "devDependencies": {
+        "dotenv-cli": "^4.0.0",
         "prisma": "^3.0.2",
         "ts-node-dev": "^1.1.8"
     },
@@ -22,11 +23,15 @@
         "test": "jest",
         "lint": "eslint --ext ts .",
         "format": "prettier --write \"**/*.ts\" \"**/*.graphql\"",
-        "start": "tsnd --poll --transpile-only --no-notify ./src/app.ts",
+        "start": "dotenv -e .env.local -- tsnd --poll --transpile-only --no-notify ./src/app.ts",
         "prisma:gen": "npx prisma generate",
-        "prisma:migrate": "npx prisma migrate dev",
-        "prisma:save": "npm run prisma:migrate -- --create-only",
-        "nexus:gen": "ts-node src/graphql/index.ts",
+        "prisma:migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
+        "prisma:migrate:local": "dotenv -e .env.local -- npx prisma migrate dev",
+        "prisma:deploy": "dotenv -e .env.prod -- npx prisma migrate deploy",
+        "prisma:save:dev": "dotenv -e .env.dev -- npm run prisma:migrate:dev -- --create-only",
+        "prisma:save:local": "dotenv -e .env.local -- npm run prisma:migrate:dev -- --create-only",
+        "nexus:gen": "npx ts-node src/graphql/index.ts",
+        "nexus-prisma:gen": "npm run nexus:gen && npm run prisma:gen && npm run format",
         "build": "tsc"
     }
 }
