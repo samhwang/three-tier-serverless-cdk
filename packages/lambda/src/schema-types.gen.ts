@@ -116,7 +116,12 @@ declare global {
     interface NexusGen extends NexusGenTypes {}
 }
 
-export interface NexusGenInputs {}
+export interface NexusGenInputs {
+    AllUsersConnectionWhere: {
+        // input type
+        activated?: boolean | null; // Boolean
+    };
+}
 
 export interface NexusGenEnums {}
 
@@ -141,11 +146,35 @@ export interface NexusGenObjects {
         message: string; // String!
         success: boolean; // Boolean!
     };
+    PageInfo: {
+        // root type
+        endCursor?: string | null; // String
+        hasNextPage: boolean; // Boolean!
+        hasPreviousPage: boolean; // Boolean!
+        startCursor?: string | null; // String
+    };
     Query: {};
+    User: {
+        // root type
+        activated: boolean; // Boolean!
+        createdAt: NexusGenScalars['DateTime']; // DateTime!
+        password: string; // String!
+        username: string; // String!
+    };
+    UserConnection: {
+        // root type
+        edges: NexusGenRootTypes['UserEdge'][]; // [UserEdge!]!
+        pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+    };
+    UserEdge: {
+        // root type
+        cursor: string; // String!
+        node: NexusGenRootTypes['User']; // User!
+    };
 }
 
 export interface NexusGenInterfaces {
-    Node: any;
+    Node: NexusGenRootTypes['User'];
 }
 
 export interface NexusGenUnions {}
@@ -161,10 +190,36 @@ export interface NexusGenFieldTypes {
         message: string; // String!
         success: boolean; // Boolean!
     };
+    PageInfo: {
+        // field return type
+        endCursor: string | null; // String
+        hasNextPage: boolean; // Boolean!
+        hasPreviousPage: boolean; // Boolean!
+        startCursor: string | null; // String
+    };
     Query: {
         // field return type
+        allUsers: NexusGenRootTypes['UserConnection']; // UserConnection!
         hello: NexusGenRootTypes['HelloType'] | null; // HelloType
         node: NexusGenRootTypes['Node'] | null; // Node
+    };
+    User: {
+        // field return type
+        activated: boolean; // Boolean!
+        createdAt: NexusGenScalars['DateTime']; // DateTime!
+        id: string; // ID!
+        password: string; // String!
+        username: string; // String!
+    };
+    UserConnection: {
+        // field return type
+        edges: NexusGenRootTypes['UserEdge'][]; // [UserEdge!]!
+        pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+    };
+    UserEdge: {
+        // field return type
+        cursor: string; // String!
+        node: NexusGenRootTypes['User']; // User!
     };
     Node: {
         // field return type
@@ -179,10 +234,36 @@ export interface NexusGenFieldTypeNames {
         message: 'String';
         success: 'Boolean';
     };
+    PageInfo: {
+        // field return type name
+        endCursor: 'String';
+        hasNextPage: 'Boolean';
+        hasPreviousPage: 'Boolean';
+        startCursor: 'String';
+    };
     Query: {
         // field return type name
+        allUsers: 'UserConnection';
         hello: 'HelloType';
         node: 'Node';
+    };
+    User: {
+        // field return type name
+        activated: 'Boolean';
+        createdAt: 'DateTime';
+        id: 'ID';
+        password: 'String';
+        username: 'String';
+    };
+    UserConnection: {
+        // field return type name
+        edges: 'UserEdge';
+        pageInfo: 'PageInfo';
+    };
+    UserEdge: {
+        // field return type name
+        cursor: 'String';
+        node: 'User';
     };
     Node: {
         // field return type name
@@ -192,6 +273,12 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
     Query: {
+        allUsers: {
+            // args
+            after?: string | null; // String
+            first: number; // Int!
+            where?: NexusGenInputs['AllUsersConnectionWhere'] | null; // AllUsersConnectionWhere
+        };
         node: {
             // args
             id: string; // ID!
@@ -199,13 +286,17 @@ export interface NexusGenArgTypes {
     };
 }
 
-export interface NexusGenAbstractTypeMembers {}
+export interface NexusGenAbstractTypeMembers {
+    Node: 'User';
+}
 
-export interface NexusGenTypeInterfaces {}
+export interface NexusGenTypeInterfaces {
+    User: 'Node';
+}
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = never;
 

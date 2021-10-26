@@ -1,12 +1,14 @@
 import path from 'path';
 import { makeSchema, connectionPlugin } from 'nexus';
 import NexusPrismaScalars from 'nexus-prisma/scalars';
-import Hello from './hello';
-import * as Interface from './interfaces';
+import Hello from './Hello';
+import * as Interface from './Interface';
+import * as User from './User';
 
 const types = {
     Hello,
     Interface,
+    User,
 };
 
 const schema = makeSchema({
