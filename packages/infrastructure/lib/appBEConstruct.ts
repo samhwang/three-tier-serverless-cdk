@@ -6,29 +6,13 @@ import {
     NodejsFunction,
     NodejsFunctionProps,
 } from '@aws-cdk/aws-lambda-nodejs';
-import {
-    InterfaceVpcEndpoint,
-    InterfaceVpcEndpointAwsService,
-    Peer,
-    Port,
-    SecurityGroup,
-    SubnetType,
-    Vpc,
-    Instance,
-    InstanceType,
-    InstanceClass,
-    InstanceSize,
-    MachineImage,
-    OperatingSystemType,
-} from '@aws-cdk/aws-ec2';
-import {
-    DatabaseClusterEngine,
-    ParameterGroup,
-    ServerlessCluster,
-    SubnetGroup,
-} from '@aws-cdk/aws-rds';
+import { ServerlessCluster } from '@aws-cdk/aws-rds';
 import { Effect, PolicyStatement } from '@aws-cdk/aws-iam';
 import { ConstructProps } from './interface';
+
+interface BackendProps extends ConstructProps {
+    databaseCluster: ServerlessCluster;
+}
 
 interface FunctionProps {
     id: string;
@@ -38,54 +22,22 @@ interface FunctionProps {
 }
 
 export default class AppBEConstruct extends Construct {
-    private restApiInstance: LambdaRestApi;
+    private readonly restApiInstance: LambdaRestApi;
 
-    private auroraCluster: ServerlessCluster;
+    private readonly auroraCluster: ServerlessCluster;
 
-    private stage: string;
+    private readonly stage: string;
 
-    private region: string;
+    private readonly region: string;
 
-    constructor(parent: Stack, name: string, props: ConstructProps) {
+    constructor(parent: Stack, name: string, props: BackendProps) {
         super(parent, name);
 
         this.stage = props.stage || 'dev';
 
         this.region = props.region || 'ap-southeast-2';
 
-        const vpc = this.generateVPC();
-        const publicSecurityGroup = this.generateSecurityGroup(
-            vpc,
-            'App-Public-Security-Group'
-        );
-        publicSecurityGroup.addIngressRule(
-            Peer.anyIpv4(),
-            Port.tcp(22),
-            'allow SSH access'
-        );
-        const privateSecurityGroup = this.generateSecurityGroup(
-            vpc,
-            'App-Security-Group'
-        );
-        privateSecurityGroup.addIngressRule(
-            privateSecurityGroup,
-            Port.allTraffic(),
-            'allow internal security group access'
-        );
-        privateSecurityGroup.addIngressRule(
-            publicSecurityGroup,
-            Port.tcp(5432),
-            'allow Aurora Serverless Postgres access'
-        );
-        const subnetGroup = this.generateSubnetGroup(vpc);
-
-        this.auroraCluster = this.generateAuroraCluster({
-            vpc,
-            subnetGroup,
-            securityGroup: privateSecurityGroup,
-        });
-
-        this.getVPCEndpoint({ vpc, securityGroup: privateSecurityGroup });
+        this.auroraCluster = props.databaseCluster;
 
         const graphqlAPILambda = this.getFunctionConstruct({
             id: 'graphqlAPILambda',
@@ -139,19 +91,6 @@ export default class AppBEConstruct extends Construct {
         apiPath.addProxy({
             anyMethod: true,
         });
-
-        const machineImage = MachineImage.fromSsmParameter(
-            '/aws/service/canonical/ubuntu/server/focal/stable/current/amd64/hvm/ebs-gp2/ami-id',
-            { os: OperatingSystemType.LINUX }
-        );
-        new Instance(this, 'App-Jumpbox', {
-            vpc,
-            securityGroup: publicSecurityGroup,
-            vpcSubnets: { subnetType: SubnetType.PUBLIC },
-            instanceType: InstanceType.of(InstanceClass.T2, InstanceSize.MICRO),
-            machineImage,
-            keyName: this.node.tryGetContext('keyName'),
-        });
     }
 
     get api(): LambdaRestApi {
@@ -163,22 +102,6 @@ export default class AppBEConstruct extends Construct {
             effect: Effect.ALLOW,
             actions: ['secretsmanager:GetSecretValue'],
             resources: [this.auroraCluster.secret?.secretArn || ''],
-        });
-    }
-
-    getVPCEndpoint({
-        vpc,
-        securityGroup,
-    }: {
-        vpc: Vpc;
-        securityGroup: SecurityGroup;
-    }): InterfaceVpcEndpoint {
-        return new InterfaceVpcEndpoint(this, 'secrets-manager', {
-            service: InterfaceVpcEndpointAwsService.SECRETS_MANAGER,
-            vpc,
-            privateDnsEnabled: true,
-            subnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
-            securityGroups: [securityGroup],
         });
     }
 
@@ -223,69 +146,5 @@ export default class AppBEConstruct extends Construct {
         lambda.addToRolePolicy(policy);
 
         return lambda;
-    }
-
-    generateVPC(): Vpc {
-        return new Vpc(this, 'AppVPC', {
-            cidr: '10.0.0.0/20',
-            natGateways: 0,
-            maxAzs: 2,
-            enableDnsHostnames: true,
-            enableDnsSupport: true,
-            subnetConfiguration: [
-                {
-                    cidrMask: 22,
-                    name: 'public',
-                    subnetType: SubnetType.PUBLIC,
-                },
-                {
-                    cidrMask: 22,
-                    name: 'private',
-                    subnetType: SubnetType.PRIVATE_ISOLATED,
-                },
-            ],
-        });
-    }
-
-    generateSecurityGroup(vpc: Vpc, securityGroupName: string): SecurityGroup {
-        return new SecurityGroup(this, securityGroupName, {
-            vpc,
-            securityGroupName,
-        });
-    }
-
-    generateSubnetGroup(vpc: Vpc): SubnetGroup {
-        return new SubnetGroup(this, 'App-RDS-Subnet-Group', {
-            vpc,
-            subnetGroupName: 'App-RDS-Subnet-Group',
-            vpcSubnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
-            removalPolicy: RemovalPolicy.DESTROY,
-            description: 'private isolated subnet group for db',
-        });
-    }
-
-    generateAuroraCluster({
-        vpc,
-        subnetGroup,
-        securityGroup,
-    }: {
-        vpc: Vpc;
-        subnetGroup: SubnetGroup;
-        securityGroup: SecurityGroup;
-    }): ServerlessCluster {
-        return new ServerlessCluster(this, 'AppAuroraCluster', {
-            engine: DatabaseClusterEngine.AURORA_POSTGRESQL,
-            parameterGroup: ParameterGroup.fromParameterGroupName(
-                this,
-                'AppParameterGroup',
-                'default.aurora-postgresql10'
-            ),
-            defaultDatabaseName: `AppDB${this.stage}`,
-            enableDataApi: true,
-            vpc,
-            subnetGroup,
-            securityGroups: [securityGroup],
-            removalPolicy: RemovalPolicy.DESTROY,
-        });
     }
 }

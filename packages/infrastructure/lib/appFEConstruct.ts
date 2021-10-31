@@ -3,7 +3,7 @@ import { Bucket } from '@aws-cdk/aws-s3';
 import { ConstructProps } from './interface';
 
 export default class AppFEConstruct extends Construct {
-    private siteBucket: Bucket;
+    private readonly siteBucket: Bucket;
 
     constructor(parent: Stack, name: string, props: ConstructProps) {
         super(parent, name);

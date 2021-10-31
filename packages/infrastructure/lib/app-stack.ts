@@ -10,17 +10,35 @@ import {
 } from '@aws-cdk/aws-cloudfront';
 import AppBEConstruct from './appBEConstruct';
 import AppFEConstruct from './appFEConstruct';
+import AppNetworkConstruct from './appNetworkContructs';
+import AppDBConstruct from './appDBConstruct';
 
 export class AppStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps) {
         super(scope, id, props);
-
         const stage = props.tags?.stage || 'dev';
         const region = props.env?.region || 'ap-southeast-2';
+
+        const NetworkConstruct = new AppNetworkConstruct(
+            this,
+            `AppNetwork-${stage}`,
+            {
+                stage,
+                region,
+            }
+        );
+
+        const DBConstruct = new AppDBConstruct(this, `AppDB-${stage}`, {
+            stage,
+            region,
+            vpc: NetworkConstruct.vpc,
+            securityGroup: NetworkConstruct.privateSG,
+        });
 
         const BEConstruct = new AppBEConstruct(this, `AppBE-${stage}`, {
             stage,
             region,
+            databaseCluster: DBConstruct.dbCluster,
         });
         const BEApi = BEConstruct.api;
         const FEConstruct = new AppFEConstruct(this, `AppFE-${stage}`, {
@@ -30,7 +48,7 @@ export class AppStack extends Stack {
 
         const cfDistribution = new CloudFrontWebDistribution(
             this,
-            'AppDistribution',
+            `AppDistribution-${stage}`,
             {
                 originConfigs: [
                     {
