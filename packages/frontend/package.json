@@ -23,6 +23,7 @@
         "@types/relay-config": "^6.0.2",
         "@vitejs/plugin-react": "^1.0.0",
         "babel-plugin-relay": "^12.0.0",
+        "eslint-plugin-testing-library": "^5.0.0",
         "graphql": "^15.6.1",
         "identity-obj-proxy": "^3.0.0",
         "msw": "^0.35.0",

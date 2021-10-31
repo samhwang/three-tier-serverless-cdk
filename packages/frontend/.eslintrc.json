@@ -2,6 +2,9 @@
     "parserOptions": {
         "project": "./tsconfig.json"
     },
+    "plugins": [
+        "testing-library"
+    ],
     "rules": {
         "react/jsx-uses-react": "off",
         "react/react-in-jsx-scope": "off"
