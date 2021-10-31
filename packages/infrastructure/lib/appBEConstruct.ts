@@ -205,7 +205,7 @@ export default class AppBEConstruct extends Construct {
                 '..',
                 '..',
                 '..',
-                'yarn.lock'
+                'package-lock.json'
             ),
             environment: {
                 ENV: process.env.ENV || 'development',
