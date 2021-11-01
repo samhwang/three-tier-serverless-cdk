@@ -78,8 +78,8 @@ export class AppStack extends Stack {
                     },
                     {
                         customOriginSource: {
-                            domainName: `${BEApi.restApiId}.execute-api.${this.region}.${this.urlSuffix}`,
-                            originPath: `/${BEApi.deploymentStage.stageName}`,
+                            domainName: `${BEApi.httpApiId}.execute-api.${this.region}.${this.urlSuffix}`,
+                            originPath: `/${stage}`,
                         },
                         behaviors: [
                             {

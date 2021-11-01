@@ -1,6 +1,7 @@
 import path from 'path';
-import { Stack, Construct, Duration, RemovalPolicy } from '@aws-cdk/core';
-import { LambdaRestApi } from '@aws-cdk/aws-apigateway';
+import { Construct, Duration, Stack } from '@aws-cdk/core';
+import { CorsHttpMethod, HttpApi, HttpMethod } from '@aws-cdk/aws-apigatewayv2';
+import { LambdaProxyIntegration } from '@aws-cdk/aws-apigatewayv2-integrations';
 import { Runtime } from '@aws-cdk/aws-lambda';
 import {
     NodejsFunction,
@@ -22,7 +23,7 @@ interface FunctionProps {
 }
 
 export default class AppBEConstruct extends Construct {
-    private readonly restApiInstance: LambdaRestApi;
+    private readonly apiInstance: HttpApi;
 
     private readonly auroraCluster: ServerlessCluster;
 
@@ -78,23 +79,33 @@ export default class AppBEConstruct extends Construct {
             },
         });
 
-        this.restApiInstance = new LambdaRestApi(this, 'AppAPI', {
-            restApiName: 'App API',
-            description: 'The App API Service',
-            handler: graphqlAPILambda,
-            proxy: false,
-            deployOptions: {
-                stageName: this.stage || 'dev',
+        this.apiInstance = new HttpApi(this, `AppAPI-${this.stage}`, {
+            corsPreflight: {
+                allowHeaders: ['Authorization'],
+                allowMethods: [
+                    CorsHttpMethod.GET,
+                    CorsHttpMethod.HEAD,
+                    CorsHttpMethod.OPTIONS,
+                    CorsHttpMethod.POST,
+                ],
+                allowOrigins: ['*'],
             },
         });
-        const apiPath = this.restApiInstance.root.addResource('api');
-        apiPath.addProxy({
-            anyMethod: true,
+        this.apiInstance.addStage(this.stage, {
+            stageName: this.stage,
+            autoDeploy: true,
+        });
+        this.apiInstance.addRoutes({
+            path: '/api/graphql',
+            methods: [HttpMethod.ANY],
+            integration: new LambdaProxyIntegration({
+                handler: graphqlAPILambda,
+            }),
         });
     }
 
-    get api(): LambdaRestApi {
-        return this.restApiInstance;
+    get api(): HttpApi {
+        return this.apiInstance;
     }
 
     getLambdaRolePolicy() {
