@@ -1,14 +1,19 @@
 import path from 'path';
-import { Construct, Duration, Stack } from '@aws-cdk/core';
-import { CorsHttpMethod, HttpApi, HttpMethod } from '@aws-cdk/aws-apigatewayv2';
-import { LambdaProxyIntegration } from '@aws-cdk/aws-apigatewayv2-integrations';
-import { Runtime } from '@aws-cdk/aws-lambda';
+import { Construct } from 'constructs';
+import { Duration, Stack } from 'aws-cdk-lib';
+import {
+    CorsHttpMethod,
+    HttpApi,
+    HttpMethod,
+} from '@aws-cdk/aws-apigatewayv2-alpha';
+import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import {
     NodejsFunction,
     NodejsFunctionProps,
-} from '@aws-cdk/aws-lambda-nodejs';
-import { ServerlessCluster } from '@aws-cdk/aws-rds';
-import { Effect, PolicyStatement } from '@aws-cdk/aws-iam';
+} from 'aws-cdk-lib/aws-lambda-nodejs';
+import { ServerlessCluster } from 'aws-cdk-lib/aws-rds';
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { ConstructProps } from './interface';
 
 interface BackendProps extends ConstructProps {
@@ -98,9 +103,10 @@ export default class AppBEConstruct extends Construct {
         this.apiInstance.addRoutes({
             path: '/api/graphql',
             methods: [HttpMethod.ANY],
-            integration: new LambdaProxyIntegration({
-                handler: graphqlAPILambda,
-            }),
+            integration: new HttpLambdaIntegration(
+                'API Lambda Integration',
+                graphqlAPILambda
+            ),
         });
     }
 

@@ -1,4 +1,5 @@
-import { Stack, Construct, RemovalPolicy } from '@aws-cdk/core';
+import { Construct } from 'constructs';
+import { Stack } from 'aws-cdk-lib';
 import {
     InterfaceVpcEndpoint,
     InterfaceVpcEndpointAwsService,
@@ -13,7 +14,7 @@ import {
     InstanceSize,
     MachineImage,
     OperatingSystemType,
-} from '@aws-cdk/aws-ec2';
+} from 'aws-cdk-lib/aws-ec2';
 import { ConstructProps } from './interface';
 
 export default class AppNetworkConstruct extends Construct {

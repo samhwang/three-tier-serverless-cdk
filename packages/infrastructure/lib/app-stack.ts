@@ -1,13 +1,14 @@
 import path from 'path';
-import { Stack, Construct, StackProps } from '@aws-cdk/core';
-import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
+import { Construct } from 'constructs';
+import { Stack, StackProps } from 'aws-cdk-lib';
+import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import {
     CloudFrontWebDistribution,
     CloudFrontAllowedMethods,
     CloudFrontAllowedCachedMethods,
     ViewerProtocolPolicy,
     PriceClass,
-} from '@aws-cdk/aws-cloudfront';
+} from 'aws-cdk-lib/aws-cloudfront';
 import AppBEConstruct from './appBEConstruct';
 import AppFEConstruct from './appFEConstruct';
 import AppNetworkConstruct from './appNetworkContructs';

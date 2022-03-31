@@ -1,11 +1,12 @@
-import { Stack, Construct, RemovalPolicy } from '@aws-cdk/core';
-import { SecurityGroup, SubnetType, Vpc } from '@aws-cdk/aws-ec2';
+import { Construct } from 'constructs';
+import { Stack, RemovalPolicy } from 'aws-cdk-lib';
+import { SecurityGroup, SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2';
 import {
     DatabaseClusterEngine,
     ParameterGroup,
     ServerlessCluster,
     SubnetGroup,
-} from '@aws-cdk/aws-rds';
+} from 'aws-cdk-lib/aws-rds';
 import { ConstructProps } from './interface';
 
 interface DBProps extends ConstructProps {

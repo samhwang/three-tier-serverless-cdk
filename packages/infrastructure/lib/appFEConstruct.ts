@@ -1,5 +1,6 @@
-import { Construct, RemovalPolicy, Stack } from '@aws-cdk/core';
-import { Bucket } from '@aws-cdk/aws-s3';
+import { Construct } from 'constructs';
+import { RemovalPolicy, Stack } from 'aws-cdk-lib';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { ConstructProps } from './interface';
 
 export default class AppFEConstruct extends Construct {
