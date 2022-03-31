@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
-import { App } from '@aws-cdk/core';
+import { App } from 'aws-cdk-lib';
 import { AppStack } from '../lib/app-stack';
 
 const env = process.env.ENV || 'dev';

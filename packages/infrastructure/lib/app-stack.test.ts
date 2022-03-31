@@ -3,7 +3,7 @@ import {
     matchTemplate,
     MatchStyle,
 } from '@aws-cdk/assert';
-import * as cdk from '@aws-cdk/core';
+import { App } from 'aws-cdk-lib';
 import { AppStack } from './app-stack';
 
 it('Empty Stack', () => {
@@ -11,7 +11,7 @@ it('Empty Stack', () => {
     const stage = process.env.STAGE || process.env.ENV || 'dev';
     const region = process.env.CDK_DEFAULT_REGION || 'ap-southeast-2';
     const stackName = `AppStack-${stage}`;
-    const app = new cdk.App();
+    const app = new App();
     const stack = new AppStack(app, 'MyTestStack', {
         env: {
             account: process.env.CDK_DEFAULT_ACCOUNT,
