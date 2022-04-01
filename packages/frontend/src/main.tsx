@@ -1,5 +1,5 @@
 import { StrictMode, Suspense } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { RelayEnvironmentProvider } from 'react-relay';
 import relayEnvironment from './relay/environment';
 import App from './components/App';
@@ -20,7 +20,8 @@ async function renderRoot() {
         </StrictMode>
     );
 
-    ReactDOM.render(RootComponent, document.getElementById('root'));
+    const root = createRoot(document.getElementById('root')!);
+    root.render(RootComponent);
 }
 
 renderRoot();

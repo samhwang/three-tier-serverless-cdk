@@ -9,5 +9,7 @@
         "noEmit": true,
         "jsx": "react-jsx"
     },
-    "include": ["./src", "./utils", "jest.config.ts", "vite.config.ts"]
+    "include": ["./src", "./utils", "jest.config.ts", "vite.config.ts", "relay.config.js"],
+    "references": [{ "path": "./tsconfig.node.json" }]
+
 }
