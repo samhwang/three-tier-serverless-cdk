@@ -1,11 +1,16 @@
+/**
+ * @generated SignedSource<<1942e0b27bab239eb647b3883b7a9d5d>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from 'relay-runtime';
-
-export type AppQueryVariables = {};
-export type AppQueryResponse = {
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type AppQuery$variables = {};
+export type AppQuery$data = {
     readonly hello: {
         readonly message: string;
         readonly success: boolean;
@@ -13,19 +18,9 @@ export type AppQueryResponse = {
     } | null;
 };
 export type AppQuery = {
-    readonly response: AppQueryResponse;
-    readonly variables: AppQueryVariables;
+    variables: AppQuery$variables;
+    response: AppQuery$data;
 };
-
-/*
-query AppQuery {
-  hello {
-    message
-    success
-    errors
-  }
-}
-*/
 
 const node: ConcreteRequest = (function () {
     var v0 = [
@@ -60,7 +55,7 @@ const node: ConcreteRequest = (function () {
                 },
             ],
             storageKey: null,
-        } as any,
+        },
     ];
     return {
         fragment: {
@@ -87,7 +82,9 @@ const node: ConcreteRequest = (function () {
             operationKind: 'query',
             text: 'query AppQuery {\n  hello {\n    message\n    success\n    errors\n  }\n}\n',
         },
-    } as any;
+    };
 })();
+
 (node as any).hash = '2dd2d9e557f2ed3f922f76fbdbed7d08';
+
 export default node;

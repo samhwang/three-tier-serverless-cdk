@@ -1,8 +1,6 @@
 module.exports = {
     src: './src/',
     schema: '../lambda/src/schema.graphql',
-    exclude: ['**/node_modules/**', '**/__mocks__/**', '**/__generated__/**'],
-    watchman: false,
+    excludes: ['**/node_modules/**', '**/__mocks__/**', '**/__generated__/**'],
     language: 'typescript',
-    extensions: ['ts', 'tsx'],
 };
