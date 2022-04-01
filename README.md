@@ -23,19 +23,19 @@ This template will spin up and bootstrap an application stack on AWS using AWS C
 When deployed, this stack will:
 
 - Create a Serverless Aurora cluster, and associated VPCs.
-- Create an EC2 Jumpbox that is attached to said VPCs so that we can connect to the database for migration work.
+- Create a Prisma Migration Lambda that is attached to said VPCs so that we can connect to the database for migration work.
 - Create a GraphQL Lambda endpoint built from esbuild typescripts.
 - Create a REST API Gateway, having only 1 route `/api`, served by the graphQL Lambda.
 - Create an S3 Bucket with the built React assets, and enable static page hosting.
 - Create a CloudFront Distribution
-  - The `/api` route will be handled by the REST API Gateway
+  - The `/api` route will be handled by the API Gateway
   - All the other routes (including 404) will be handled by the React App.
 
 ## Requirements
 
 - [Node 14](https://nodejs.org/en/download/ "Node URL")
   - NPM 7 (Usually bundled with Node. If you're not on v7, run `npm install -g npm@7`)
-  - [Typescript 4.4](https://www.typescriptlang.org/download "TS URL")
+  - [Typescript 4.4+](https://www.typescriptlang.org/download "TS URL")
 - AWS Tools
   - [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/cli.html "AWS CDK URL")
   - [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html "AWS SAM URL")

@@ -1,6 +1,6 @@
 import path from 'path';
 import { Construct } from 'constructs';
-import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
 import {
     CorsHttpMethod,
     HttpApi,
@@ -40,43 +40,16 @@ export default class AppApiStack extends Stack {
 
         this.auroraCluster = props.databaseCluster;
 
-        const graphqlAPILambda = this.getFunctionConstruct({
+        const graphqlAPILambda = this.getPrismaFunction({
             id: 'graphqlAPILambda',
             handler: 'handler',
             entry: 'handler',
             options: {
                 functionName: `app-graphqlAPILambda-${this.stage}`,
-                bundling: {
-                    minify: true,
-                    sourceMap: true,
-                    nodeModules: ['readable-stream', '@prisma/client'],
-                    commandHooks: {
-                        beforeBundling(): string[] {
-                            return [];
-                        },
-                        beforeInstall(): string[] {
-                            return [];
-                        },
-                        afterBundling(inputDir: string, outputDir: string) {
-                            const schemaPath = path.join(
-                                inputDir,
-                                'packages/lambda/src/schema.graphql'
-                            );
-                            const prismaPath = path.join(
-                                inputDir,
-                                'packages/lambda/prisma'
-                            );
-                            return [
-                                `cp -R ${prismaPath}/ ${outputDir}/`,
-                                `cp ${schemaPath} ${outputDir}/`,
-                                `cd ${outputDir}`,
-                                `npx prisma generate`,
-                                `rm -rf node_modules/@prisma/engines node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
-                            ];
-                        },
-                    },
-                },
             },
+        });
+        new CfnOutput(this, 'graphqlAPILambdaArn', {
+            value: graphqlAPILambda.functionArn,
         });
 
         this.apiInstance = new HttpApi(this, `AppAPI-${this.stage}`, {
@@ -102,6 +75,21 @@ export default class AppApiStack extends Stack {
                 'API Lambda Integration',
                 graphqlAPILambda
             ),
+        });
+        new CfnOutput(this, 'HttpApiEndpoint', {
+            value: this.apiInstance.apiEndpoint,
+        });
+
+        const migrationRunner = this.getPrismaFunction({
+            id: 'prismaMigrationRunnerLambda',
+            handler: 'migration-runner',
+            entry: 'handler',
+            options: {
+                functionName: `app-migration-runner-lambda-${this.stage}`,
+            },
+        });
+        new CfnOutput(this, 'MigrationLambdaARN', {
+            value: migrationRunner.functionArn,
         });
     }
 
@@ -149,6 +137,52 @@ export default class AppApiStack extends Stack {
                 sourceMap: true,
             },
             ...options,
+        });
+    }
+
+    getPrismaFunction({
+        id,
+        handler,
+        entry,
+        options,
+    }: FunctionProps): NodejsFunction {
+        return this.getFunctionConstruct({
+            id,
+            handler,
+            entry,
+            options: {
+                bundling: {
+                    minify: true,
+                    sourceMap: true,
+                    nodeModules: ['readable-stream', '@prisma/client'],
+                    commandHooks: {
+                        beforeBundling(): string[] {
+                            return [];
+                        },
+                        beforeInstall(): string[] {
+                            return [];
+                        },
+                        afterBundling(inputDir: string, outputDir: string) {
+                            const schemaPath = path.join(
+                                inputDir,
+                                'packages/lambda/src/schema.graphql'
+                            );
+                            const prismaPath = path.join(
+                                inputDir,
+                                'packages/lambda/prisma'
+                            );
+                            return [
+                                `cp -R ${prismaPath}/ ${outputDir}/`,
+                                `cp ${schemaPath} ${outputDir}/`,
+                                `cd ${outputDir}`,
+                                `npx prisma generate`,
+                                `rm -rf node_modules/@prisma/engines node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
+                            ];
+                        },
+                    },
+                },
+                ...options,
+            },
         });
     }
 }
