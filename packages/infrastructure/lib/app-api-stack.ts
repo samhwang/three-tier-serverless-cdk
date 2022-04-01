@@ -13,7 +13,7 @@ import {
     NodejsFunctionProps,
 } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { ServerlessCluster } from 'aws-cdk-lib/aws-rds';
-import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 
 interface BackendProps extends StackProps {
     databaseCluster: ServerlessCluster;
@@ -109,21 +109,13 @@ export default class AppApiStack extends Stack {
         return this.apiInstance;
     }
 
-    getLambdaRolePolicy() {
-        return new PolicyStatement({
-            effect: Effect.ALLOW,
-            actions: ['secretsmanager:GetSecretValue'],
-            resources: [this.auroraCluster.secret?.secretArn || ''],
-        });
-    }
-
     getFunctionConstruct({
         id,
         handler,
         entry,
         options,
     }: FunctionProps): NodejsFunction {
-        const lambda = new NodejsFunction(this, id, {
+        return new NodejsFunction(this, id, {
             runtime: Runtime.NODEJS_14_X,
             functionName: `app-${handler}-${this.stage}`,
             entry: path.resolve(
@@ -145,7 +137,11 @@ export default class AppApiStack extends Stack {
             environment: {
                 ENV: process.env.ENV || 'development',
                 REGION: this.region || 'ap-southeast-2',
-                SECRET_ID: this.auroraCluster.secret?.secretArn || '',
+                DB_SECRET: Secret.fromSecretCompleteArn(
+                    this,
+                    'Database URL Secret',
+                    this.auroraCluster.secret!.secretArn
+                ).secretValue.toString(),
                 AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
             },
             bundling: {
@@ -154,9 +150,5 @@ export default class AppApiStack extends Stack {
             },
             ...options,
         });
-        const policy = this.getLambdaRolePolicy();
-        lambda.addToRolePolicy(policy);
-
-        return lambda;
     }
 }

@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { SecretsManager } from '@aws-sdk/client-secrets-manager';
 
-const sm = new SecretsManager({ region: process.env.REGION });
 let db: PrismaClient;
 
 export const getDb = async () => {
@@ -9,12 +7,10 @@ export const getDb = async () => {
         return db;
     }
 
-    const dbUrl = await sm.getSecretValue({
-        SecretId: process.env.SECRET_ID || '',
-    });
+    const dbSecret = process.env.DB_SECRET || '{}';
 
-    const secretString = JSON.parse(dbUrl.SecretString || '{}');
-    const url = `postgresql://${secretString.username}:${secretString.password}@${secretString.host}:${secretString.port}/${secretString.dbname}?connection_limit=1`;
+    const parsedSecret = JSON.parse(dbSecret);
+    const url = `postgresql://${parsedSecret.username}:${parsedSecret.password}@${parsedSecret.host}:${parsedSecret.port}/${parsedSecret.dbname}?connection_limit=1`;
 
     db = new PrismaClient({
         datasources: { db: { url } },
