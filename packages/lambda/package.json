@@ -4,7 +4,6 @@
     "private": true,
     "description": "App Lambdas",
     "dependencies": {
-        "@aws-sdk/client-secrets-manager": "^3.37.0",
         "@prisma/client": "^3.0.2",
         "aws-lambda-fastify": "^2.1.2",
         "fastify": "^3.21.3",

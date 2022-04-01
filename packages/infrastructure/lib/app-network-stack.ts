@@ -2,17 +2,10 @@ import { Stack, StackProps } from 'aws-cdk-lib';
 import {
     InterfaceVpcEndpoint,
     InterfaceVpcEndpointAwsService,
-    Peer,
     Port,
     SecurityGroup,
     SubnetType,
     Vpc,
-    Instance,
-    InstanceType,
-    InstanceClass,
-    InstanceSize,
-    MachineImage,
-    OperatingSystemType,
 } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 
@@ -20,8 +13,6 @@ export default class AppNetworkStack extends Stack {
     private readonly stage: string;
 
     private readonly appVpc: Vpc;
-
-    private readonly publicSecurityGroup: SecurityGroup;
 
     private readonly privateSecurityGroup: SecurityGroup;
 
@@ -32,16 +23,6 @@ export default class AppNetworkStack extends Stack {
 
         this.appVpc = this.generateVPC();
 
-        this.publicSecurityGroup = this.generateSecurityGroup(
-            this.appVpc,
-            `App-Public-Security-Group-${this.stage}-${this.region}`
-        );
-        this.publicSecurityGroup.addIngressRule(
-            Peer.anyIpv4(),
-            Port.tcp(22),
-            'allow SSH access'
-        );
-
         this.privateSecurityGroup = this.generateSecurityGroup(
             this.appVpc,
             'App-Security-Group'
@@ -51,18 +32,11 @@ export default class AppNetworkStack extends Stack {
             Port.allTraffic(),
             'allow internal security group access'
         );
-        this.privateSecurityGroup.addIngressRule(
-            this.publicSecurityGroup,
-            Port.tcp(5432),
-            'allow Aurora Serverless Postgres access'
-        );
 
         this.getVPCEndpoint({
             vpc: this.appVpc,
             securityGroup: this.privateSecurityGroup,
         });
-
-        this.generateJumpbox();
     }
 
     generateVPC(): Vpc {
@@ -98,10 +72,6 @@ export default class AppNetworkStack extends Stack {
         });
     }
 
-    get publicSG(): SecurityGroup {
-        return this.publicSecurityGroup;
-    }
-
     get privateSG(): SecurityGroup {
         return this.privateSecurityGroup;
     }
@@ -119,21 +89,6 @@ export default class AppNetworkStack extends Stack {
             privateDnsEnabled: true,
             subnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
             securityGroups: [securityGroup],
-        });
-    }
-
-    generateJumpbox(): void {
-        const machineImage = MachineImage.fromSsmParameter(
-            '/aws/service/canonical/ubuntu/server/focal/stable/current/amd64/hvm/ebs-gp2/ami-id',
-            { os: OperatingSystemType.LINUX }
-        );
-        new Instance(this, 'App-Jumpbox', {
-            vpc: this.appVpc,
-            securityGroup: this.publicSecurityGroup,
-            vpcSubnets: { subnetType: SubnetType.PUBLIC },
-            instanceType: InstanceType.of(InstanceClass.T2, InstanceSize.MICRO),
-            machineImage,
-            keyName: this.node.tryGetContext('keyName'),
         });
     }
 }
