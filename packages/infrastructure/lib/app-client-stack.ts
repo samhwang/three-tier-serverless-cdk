@@ -1,14 +1,23 @@
+import { execSync, ExecSyncOptions } from 'child_process';
 import path from 'path';
+import fs from 'fs';
 import { Construct } from 'constructs';
-import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
+import {
+    CfnOutput,
+    DockerImage,
+    RemovalPolicy,
+    Stack,
+    StackProps,
+} from 'aws-cdk-lib';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import {
-    CloudFrontWebDistribution,
-    CloudFrontAllowedMethods,
     CloudFrontAllowedCachedMethods,
-    ViewerProtocolPolicy,
+    CloudFrontAllowedMethods,
+    CloudFrontWebDistribution,
+    OriginAccessIdentity,
     PriceClass,
+    ViewerProtocolPolicy,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha';
 
@@ -26,10 +35,14 @@ export default class AppClientStack extends Stack {
             bucketName: `app-frontend-bucket-${stage}`,
             websiteIndexDocument: 'index.html',
             websiteErrorDocument: 'index.html',
-            publicReadAccess: true,
             removalPolicy: RemovalPolicy.DESTROY,
             autoDeleteObjects: true,
         });
+        const originAccessIdentity = new OriginAccessIdentity(
+            this,
+            'app-site-origin-access-identity'
+        );
+        siteBucket.grantRead(originAccessIdentity);
 
         const cfDistribution = new CloudFrontWebDistribution(
             this,
@@ -39,6 +52,7 @@ export default class AppClientStack extends Stack {
                     {
                         s3OriginSource: {
                             s3BucketSource: siteBucket,
+                            originAccessIdentity,
                         },
                         behaviors: [
                             {
@@ -58,6 +72,8 @@ export default class AppClientStack extends Stack {
                                         'Origin',
                                     ],
                                 },
+                                viewerProtocolPolicy:
+                                    ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                             },
                         ],
                     },
@@ -92,11 +108,40 @@ export default class AppClientStack extends Stack {
             }
         );
 
+        const execOptions: ExecSyncOptions = {
+            stdio: ['ignore', process.stderr, 'inherit'],
+        };
+
+        const clientBundle = Source.asset(path.resolve('..', 'frontend'), {
+            bundling: {
+                image: DockerImage.fromRegistry('node:14'),
+                local: {
+                    tryBundle(outputDir: string): boolean {
+                        try {
+                            execSync('npx vite build', execOptions);
+                            fs.copyFileSync(
+                                path.resolve('..', 'build'),
+                                outputDir
+                            );
+                            return true;
+                        } catch (error: any) {
+                            console.error(error);
+                            return false;
+                        }
+                    },
+                },
+            },
+        });
+
         new BucketDeployment(this, 'DeployWithInvalidation', {
-            sources: [Source.asset(path.resolve('..', 'frontend', 'build'))],
+            sources: [clientBundle],
             destinationBucket: siteBucket,
             distribution: cfDistribution,
             distributionPaths: ['/*'],
+        });
+
+        new CfnOutput(this, 'DistributionDomain', {
+            value: cfDistribution.distributionDomainName,
         });
     }
 }
