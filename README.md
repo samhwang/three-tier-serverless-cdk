@@ -16,7 +16,6 @@ This template will spin up and bootstrap an application stack on AWS using AWS C
 - Infrastructure
   - AWS CDK
   - AWS Aurora Serverless PostgreSQL
-  - AWS EC2 Jumpbox to configure PostgreSQL
 
 ## Bootstrapping process
 
