@@ -1,6 +1,6 @@
 import path from 'path';
 import { Construct } from 'constructs';
-import { Duration, Stack } from 'aws-cdk-lib';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import {
     CorsHttpMethod,
     HttpApi,
@@ -14,9 +14,8 @@ import {
 } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { ServerlessCluster } from 'aws-cdk-lib/aws-rds';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
-import { ConstructProps } from './interface';
 
-interface BackendProps extends ConstructProps {
+interface BackendProps extends StackProps {
     databaseCluster: ServerlessCluster;
 }
 
@@ -27,21 +26,17 @@ interface FunctionProps {
     options?: NodejsFunctionProps;
 }
 
-export default class AppBEConstruct extends Construct {
+export default class AppApiStack extends Stack {
     private readonly apiInstance: HttpApi;
 
     private readonly auroraCluster: ServerlessCluster;
 
     private readonly stage: string;
 
-    private readonly region: string;
+    constructor(scope: Construct, id: string, props: BackendProps) {
+        super(scope, id, props);
 
-    constructor(parent: Stack, name: string, props: BackendProps) {
-        super(parent, name);
-
-        this.stage = props.stage || 'dev';
-
-        this.region = props.region || 'ap-southeast-2';
+        this.stage = props.tags?.stage || 'dev';
 
         this.auroraCluster = props.databaseCluster;
 
