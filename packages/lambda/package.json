@@ -32,7 +32,7 @@
         "prisma:deploy": "dotenv -e .env.prod -- npx prisma migrate deploy",
         "prisma:save:dev": "dotenv -e .env.dev -- npm run prisma:migrate:dev -- --create-only",
         "prisma:save:local": "dotenv -e .env.local -- npm run prisma:migrate:dev -- --create-only",
-        "nexus:gen": "npx ts-node src/graphql/index.ts",
+        "nexus:gen": "npx esno src/graphql/index.ts",
         "nexus-prisma:gen": "npm run nexus:gen && npm run prisma:gen && npm run format",
         "build": "tsc"
     }
