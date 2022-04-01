@@ -1,6 +1,7 @@
 import path from 'path';
 import { Construct } from 'constructs';
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import {
     CloudFrontWebDistribution,
@@ -9,43 +10,26 @@ import {
     ViewerProtocolPolicy,
     PriceClass,
 } from 'aws-cdk-lib/aws-cloudfront';
-import AppBEConstruct from './appBEConstruct';
-import AppFEConstruct from './appFEConstruct';
-import AppNetworkConstruct from './appNetworkContructs';
-import AppDBConstruct from './appDBConstruct';
+import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha';
 
-export class AppStack extends Stack {
-    constructor(scope: Construct, id: string, props: StackProps) {
+interface ClientProps extends StackProps {
+    httpApiId: HttpApi['apiId'];
+}
+
+export default class AppClientStack extends Stack {
+    constructor(scope: Construct, id: string, props: ClientProps) {
         super(scope, id, props);
+
         const stage = props.tags?.stage || 'dev';
-        const region = props.env?.region || 'ap-southeast-2';
 
-        const NetworkConstruct = new AppNetworkConstruct(
-            this,
-            `AppNetwork-${stage}`,
-            {
-                stage,
-                region,
-            }
-        );
-
-        const DBConstruct = new AppDBConstruct(this, `AppDB-${stage}`, {
-            stage,
-            region,
-            vpc: NetworkConstruct.vpc,
-            securityGroup: NetworkConstruct.privateSG,
+        const siteBucket = new Bucket(this, `AppFEBucket-${stage}`, {
+            bucketName: `app-frontend-bucket-${stage}`,
+            websiteIndexDocument: 'index.html',
+            websiteErrorDocument: 'index.html',
+            publicReadAccess: true,
+            removalPolicy: RemovalPolicy.DESTROY,
+            autoDeleteObjects: true,
         });
-
-        const BEConstruct = new AppBEConstruct(this, `AppBE-${stage}`, {
-            stage,
-            region,
-            databaseCluster: DBConstruct.dbCluster,
-        });
-        const BEApi = BEConstruct.api;
-        const FEConstruct = new AppFEConstruct(this, `AppFE-${stage}`, {
-            stage,
-        });
-        const FEBucket = FEConstruct.bucket;
 
         const cfDistribution = new CloudFrontWebDistribution(
             this,
@@ -54,7 +38,7 @@ export class AppStack extends Stack {
                 originConfigs: [
                     {
                         s3OriginSource: {
-                            s3BucketSource: FEBucket,
+                            s3BucketSource: siteBucket,
                         },
                         behaviors: [
                             {
@@ -79,7 +63,7 @@ export class AppStack extends Stack {
                     },
                     {
                         customOriginSource: {
-                            domainName: `${BEApi.httpApiId}.execute-api.${this.region}.${this.urlSuffix}`,
+                            domainName: `${props.httpApiId}.execute-api.${this.region}.${this.urlSuffix}`,
                             originPath: `/${stage}`,
                         },
                         behaviors: [
@@ -110,7 +94,7 @@ export class AppStack extends Stack {
 
         new BucketDeployment(this, 'DeployWithInvalidation', {
             sources: [Source.asset(path.resolve('..', 'frontend', 'build'))],
-            destinationBucket: FEBucket,
+            destinationBucket: siteBucket,
             distribution: cfDistribution,
             distributionPaths: ['/*'],
         });

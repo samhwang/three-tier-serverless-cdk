@@ -1,5 +1,4 @@
-import { Construct } from 'constructs';
-import { Stack } from 'aws-cdk-lib';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import {
     InterfaceVpcEndpoint,
     InterfaceVpcEndpointAwsService,
@@ -15,12 +14,10 @@ import {
     MachineImage,
     OperatingSystemType,
 } from 'aws-cdk-lib/aws-ec2';
-import { ConstructProps } from './interface';
+import { Construct } from 'constructs';
 
-export default class AppNetworkConstruct extends Construct {
+export default class AppNetworkStack extends Stack {
     private readonly stage: string;
-
-    private readonly region: string;
 
     private readonly appVpc: Vpc;
 
@@ -28,12 +25,10 @@ export default class AppNetworkConstruct extends Construct {
 
     private readonly privateSecurityGroup: SecurityGroup;
 
-    constructor(parent: Stack, name: string, props: ConstructProps) {
-        super(parent, name);
+    constructor(scope: Construct, id: string, props: StackProps) {
+        super(scope, id, props);
 
-        this.stage = props.stage || 'dev';
-
-        this.region = props.region || 'ap-southeast-2';
+        this.stage = props.tags?.stage || 'dev';
 
         this.appVpc = this.generateVPC();
 

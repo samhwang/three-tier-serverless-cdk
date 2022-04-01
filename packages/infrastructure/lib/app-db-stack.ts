@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { Stack, RemovalPolicy } from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy } from 'aws-cdk-lib';
 import { SecurityGroup, SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2';
 import {
     DatabaseClusterEngine,
@@ -7,26 +7,21 @@ import {
     ServerlessCluster,
     SubnetGroup,
 } from 'aws-cdk-lib/aws-rds';
-import { ConstructProps } from './interface';
 
-interface DBProps extends ConstructProps {
+interface DBProps extends StackProps {
     vpc: Vpc;
     securityGroup: SecurityGroup;
 }
 
-export default class AppDBConstruct extends Construct {
+export default class AppDBStack extends Stack {
     private readonly auroraCluster: ServerlessCluster;
 
     private readonly stage: string;
 
-    private readonly region: string;
+    constructor(scope: Construct, id: string, props: DBProps) {
+        super(scope, id, props);
 
-    constructor(parent: Stack, name: string, props: DBProps) {
-        super(parent, name);
-
-        this.stage = props.stage || 'dev';
-
-        this.region = props.region || 'ap-southeast-2';
+        this.stage = props.tags?.stage || 'dev';
 
         const subnetGroup = this.generateSubnetGroup(props.vpc);
 
