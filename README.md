@@ -16,6 +16,7 @@ This template will spin up and bootstrap an application stack on AWS using AWS C
 - Infrastructure
   - AWS CDK
   - AWS Aurora Serverless PostgreSQL
+- Managed by Turborepo
 
 ## Bootstrapping process
 
@@ -33,7 +34,7 @@ When deployed, this stack will:
 ## Requirements
 
 - [Node 14](https://nodejs.org/en/download/ "Node URL")
-  - NPM 7 (Usually bundled with Node. If you're not on v7, run `npm install -g npm@7`)
+  - NPM 8 (Usually bundled with Node. If you're not on v8, run `npm install -g npm@8`)
   - [Typescript 4.4+](https://www.typescriptlang.org/download "TS URL")
 - AWS Tools
   - [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/cli.html "AWS CDK URL")
@@ -87,7 +88,6 @@ npm run start
 ## Build process
 
 ```shell
-npm run build:frontend
 npm run deploy:dev # To deploy dev stage
 npm run deploy:prod # To deploy prod stage
 ```
