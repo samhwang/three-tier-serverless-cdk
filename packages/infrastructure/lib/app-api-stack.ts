@@ -31,6 +31,8 @@ export default class AppApiStack extends Stack {
 
     private readonly auroraCluster: ServerlessCluster;
 
+    private readonly dbSecret: string;
+
     private readonly stage: string;
 
     constructor(scope: Construct, id: string, props: BackendProps) {
@@ -39,6 +41,11 @@ export default class AppApiStack extends Stack {
         this.stage = props.tags?.stage || 'dev';
 
         this.auroraCluster = props.databaseCluster;
+        this.dbSecret = Secret.fromSecretCompleteArn(
+            this,
+            'Database URL Secret',
+            this.auroraCluster.secret!.secretArn
+        ).secretValue.toString();
 
         const graphqlAPILambda = this.getPrismaFunction({
             id: 'graphqlAPILambda',
@@ -125,11 +132,7 @@ export default class AppApiStack extends Stack {
             environment: {
                 ENV: process.env.ENV || 'development',
                 REGION: this.region || 'ap-southeast-2',
-                DB_SECRET: Secret.fromSecretCompleteArn(
-                    this,
-                    'Database URL Secret',
-                    this.auroraCluster.secret!.secretArn
-                ).secretValue.toString(),
+                DB_SECRET: this.dbSecret,
                 AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
             },
             bundling: {
@@ -154,7 +157,11 @@ export default class AppApiStack extends Stack {
                 bundling: {
                     minify: true,
                     sourceMap: true,
-                    nodeModules: ['readable-stream', '@prisma/client'],
+                    nodeModules: [
+                        'readable-stream',
+                        '@prisma/client',
+                        'nexus-prisma',
+                    ],
                     commandHooks: {
                         beforeBundling(): string[] {
                             return [];
