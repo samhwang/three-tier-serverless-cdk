@@ -7,7 +7,6 @@
     ],
     "rules": {
         "react/jsx-uses-react": "off",
-        "react/react-in-jsx-scope": "off",
-        "import/no-relative-packages": "off"
+        "react/react-in-jsx-scope": "off"
     }
 }

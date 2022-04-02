@@ -20,6 +20,7 @@
         "import/prefer-default-export": "off",
         "prettier/prettier": "error",
         "no-new": "off",
-        "no-useless-constructor": "off"
+        "no-useless-constructor": "off",
+        "import/no-relative-packages": "off"
     }
 }
