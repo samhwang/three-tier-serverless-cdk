@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { useLazyLoadQuery, graphql } from 'react-relay';
 import { AppQuery } from './__generated__/AppQuery.graphql';
 
@@ -12,7 +11,7 @@ const HelloQuery = graphql`
     }
 `;
 
-const App: FC = () => {
+function App() {
     const data = useLazyLoadQuery<AppQuery>(HelloQuery, {});
     const message = data.hello?.message;
 
@@ -21,6 +20,6 @@ const App: FC = () => {
             <p>{message}</p>
         </div>
     );
-};
+}
 
 export default App;
