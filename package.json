@@ -2,6 +2,7 @@
     "name": "cdk-ts-node-lambda-react-graphql",
     "version": "0.1.0",
     "author": "samhwang",
+    "packageManager": "npm@8.6.0",
     "private": true,
     "workspaces": [
         "packages/*"
