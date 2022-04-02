@@ -112,7 +112,8 @@ export default class AppClientStack extends Stack {
             stdio: ['ignore', process.stderr, 'inherit'],
         };
 
-        const clientBundle = Source.asset(path.resolve('..', 'frontend'), {
+        const clientPath = path.resolve(__dirname, '..', '..', 'frontend');
+        const clientBundle = Source.asset(clientPath, {
             bundling: {
                 image: DockerImage.fromRegistry('node:14'),
                 local: {

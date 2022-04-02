@@ -38,7 +38,7 @@ const apiStack = new AppApiStack(app, `AppApiStack-${stage}`, {
     ...getStackProps(`AppApiStack-${stage}`),
     databaseCluster: dbStack.dbCluster,
 });
-new AppClientStack(app, `AppClientStack=${stage}`, {
+new AppClientStack(app, `AppClientStack-${stage}`, {
     ...getStackProps(`AppClientStack-${stage}`),
     httpApiId: apiStack.api.httpApiId,
 });
