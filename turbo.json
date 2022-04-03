@@ -15,7 +15,19 @@
         "format": {
             "outputs": []
         },
-        "deploy": {
+        "synth:dev": {
+            "dependsOn": ["build"],
+            "outputs": []
+        },
+        "synth:prod": {
+            "dependsOn": ["build"],
+            "outputs": []
+        },
+        "deploy:dev": {
+            "dependsOn": ["lint", "test", "build"],
+            "outputs": []
+        },
+        "deploy:prod": {
             "dependsOn": ["lint", "test", "build"],
             "outputs": []
         },

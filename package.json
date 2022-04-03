@@ -13,15 +13,16 @@
     },
     "scripts": {
         "prepare": "husky install",
-        "test": "npx turbo run test",
-        "lint": "npx turbo run lint",
-        "format": "npx turbo run format",
-        "synth:dev": "npm run synth:dev --workspace=@app/infrastructure",
-        "synth:prod": "npm run synth:prod --workspace=@app/infrastructure",
-        "deploy:dev": "npm run deploy:dev --workspace=@app/infrastructure",
-        "deploy:prod": "npm run deploy:prod --workspace=@app/infrastructure",
-        "destroy:dev": "npm run destroy:dev --workspace=@app/infrastructure",
-        "destroy:prod": "npm run destroy:prod --workspace=@app/infrastructure"
+        "test": "turbo run test",
+        "lint": "turbo run lint",
+        "format": "turbo run format",
+        "build": "turbo run build",
+        "synth:dev": "turbo run build synth:dev",
+        "synth:prod": "turbo run build synth:prod",
+        "deploy:dev": "turbo run build deploy:dev",
+        "deploy:prod": "turbo run build deploy:prod",
+        "destroy:dev": "turbo run destroy:dev",
+        "destroy:prod": "turbo run destroy:prod"
     },
     "devDependencies": {
         "@jest/types": "^27.1.0",
