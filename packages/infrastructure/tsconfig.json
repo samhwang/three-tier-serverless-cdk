@@ -1,7 +1,7 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "outDir": "./build"
-    },
-    "include": ["./bin", "./lib", "jest.config.ts", "./scripts"]
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./build"
+  },
+  "include": ["./bin", "./lib", "jest.config.ts", "./scripts"]
 }

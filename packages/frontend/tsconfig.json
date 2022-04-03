@@ -1,15 +1,20 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "ESNext",
-        "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "useDefineForClassFields": true,
-        "strict": true,
-        "noEmit": true,
-        "jsx": "react-jsx"
-    },
-    "include": ["./src", "./utils", "jest.config.ts", "vite.config.ts", "relay.config.js"],
-    "references": [{ "path": "./tsconfig.node.json" }]
-
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "useDefineForClassFields": true,
+    "strict": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "./src",
+    "./utils",
+    "jest.config.ts",
+    "vite.config.ts",
+    "relay.config.js"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

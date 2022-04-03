@@ -1,32 +1,32 @@
 {
-    "name": "@app/infrastructure",
-    "version": "1.0.0",
-    "private": true,
-    "description": "CDK Infrastructures for App",
-    "dependencies": {
-        "@aws-cdk/aws-apigatewayv2-alpha": "^2.18.0-alpha.0",
-        "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.18.0-alpha.0",
-        "@aws-sdk/client-lambda": "^3.58.0",
-        "@types/source-map-support": "^0.5.4",
-        "aws-cdk-lib": "^2.18.0",
-        "constructs": "^10.0.101",
-        "source-map-support": "^0.5.16"
-    },
-    "devDependencies": {
-        "@aws-cdk/assert": "^2.18.0",
-        "aws-cdk": "^2.18.0"
-    },
-    "scripts": {
-        "test": "jest",
-        "lint": "eslint --ext ts lib bin scripts",
-        "format": "prettier --write \"**/*.ts\"",
-        "synth:dev": "ENV=dev cdk synth --no-staging --all",
-        "synth:prod": "ENV=prod cdk synth --no-staging --all",
-        "deploy:dev": "ENV=dev cdk deploy",
-        "deploy:prod": "ENV=prod cdk deploy",
-        "migrate:dev": "ENV=dev REGION=ap-southeast-2 npx esno scripts/run-migrate.ts",
-        "migrate:prod": "ENV=prod REGION=ap-southeast-2 npx esno scripts/run-migrate.ts",
-        "destroy:dev": "ENV=dev cdk destroy",
-        "destroy:prod": "ENV=prod cdk destroy"
-    }
+  "name": "@app/infrastructure",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CDK Infrastructures for App",
+  "dependencies": {
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.18.0-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.18.0-alpha.0",
+    "@aws-sdk/client-lambda": "^3.58.0",
+    "@types/source-map-support": "^0.5.4",
+    "aws-cdk-lib": "^2.18.0",
+    "constructs": "^10.0.101",
+    "source-map-support": "^0.5.16"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "^2.18.0",
+    "aws-cdk": "^2.18.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint --ext ts lib bin scripts",
+    "format": "prettier --write \"**/*.ts\"",
+    "synth:dev": "ENV=dev cdk synth --no-staging --all",
+    "synth:prod": "ENV=prod cdk synth --no-staging --all",
+    "deploy:dev": "ENV=dev cdk deploy",
+    "deploy:prod": "ENV=prod cdk deploy",
+    "migrate:dev": "ENV=dev REGION=ap-southeast-2 npx esno scripts/run-migrate.ts",
+    "migrate:prod": "ENV=prod REGION=ap-southeast-2 npx esno scripts/run-migrate.ts",
+    "destroy:dev": "ENV=dev cdk destroy",
+    "destroy:prod": "ENV=prod cdk destroy"
+  }
 }

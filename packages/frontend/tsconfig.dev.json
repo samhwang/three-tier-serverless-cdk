@@ -1,8 +1,14 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-        "jsx": "react-jsxdev",
-        "allowJs": true
-    },
-    "include": ["./src", "./utils", "jest.config.ts", "vite.config.ts", "relay.config.js"]
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsxdev",
+    "allowJs": true
+  },
+  "include": [
+    "./src",
+    "./utils",
+    "jest.config.ts",
+    "vite.config.ts",
+    "relay.config.js"
+  ]
 }

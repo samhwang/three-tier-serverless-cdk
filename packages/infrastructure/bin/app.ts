@@ -12,34 +12,34 @@ const region = process.env.CDK_DEFAULT_REGION || 'ap-southeast-2';
 
 const app = new App();
 const getStackProps = (stackId: string): StackProps => ({
-    env: {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
-        region,
-    },
-    description: stackId,
-    tags: {
-        env,
-        stage,
-        region,
-    },
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region,
+  },
+  description: stackId,
+  tags: {
+    env,
+    stage,
+    region,
+  },
 });
 
 const networkStack = new AppNetworkStack(
-    app,
-    `AppNetworkStack-${stage}`,
-    getStackProps(`AppNetworkStack-${stage}`)
+  app,
+  `AppNetworkStack-${stage}`,
+  getStackProps(`AppNetworkStack-${stage}`)
 );
 const dbStack = new AppDBStack(app, `AppDBStack-${stage}`, {
-    ...getStackProps(`AppNetworkStack-${stage}`),
-    vpc: networkStack.vpc,
-    securityGroup: networkStack.privateSG,
+  ...getStackProps(`AppNetworkStack-${stage}`),
+  vpc: networkStack.vpc,
+  securityGroup: networkStack.privateSG,
 });
 const apiStack = new AppApiStack(app, `AppApiStack-${stage}`, {
-    ...getStackProps(`AppApiStack-${stage}`),
-    databaseCluster: dbStack.dbCluster,
+  ...getStackProps(`AppApiStack-${stage}`),
+  databaseCluster: dbStack.dbCluster,
 });
 new AppClientStack(app, `AppClientStack-${stage}`, {
-    ...getStackProps(`AppClientStack-${stage}`),
-    httpApiId: apiStack.api.httpApiId,
-    apiUrlSuffix: apiStack.urlSuffix,
+  ...getStackProps(`AppClientStack-${stage}`),
+  httpApiId: apiStack.api.httpApiId,
+  apiUrlSuffix: apiStack.urlSuffix,
 });

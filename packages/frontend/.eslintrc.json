@@ -1,12 +1,10 @@
 {
-    "parserOptions": {
-        "project": "./tsconfig.dev.json"
-    },
-    "plugins": [
-        "testing-library"
-    ],
-    "rules": {
-        "react/jsx-uses-react": "off",
-        "react/react-in-jsx-scope": "off"
-    }
+  "parserOptions": {
+    "project": "./tsconfig.dev.json"
+  },
+  "plugins": ["testing-library"],
+  "rules": {
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off"
+  }
 }

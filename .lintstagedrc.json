@@ -1,14 +1,14 @@
 {
-    "packages/frontend/**/*.{ts,tsx}": [
-        "cd packages/frontend && eslint --cache --fix",
-        "prettier --write"
-    ],
-    "packages/lambda/**/*.ts": [
-        "cd packages/lambda && eslint --cache --fix",
-        "prettier --write"
-    ],
-    "packages/infrastructure/**/*.ts": [
-        "cd packages/infrastructure && eslint --cache --fix",
-        "prettier --write"
-    ]
+  "packages/frontend/**/*.{ts,tsx}": [
+    "cd packages/frontend && eslint --cache --fix",
+    "prettier --write"
+  ],
+  "packages/lambda/**/*.ts": [
+    "cd packages/lambda && eslint --cache --fix",
+    "prettier --write"
+  ],
+  "packages/infrastructure/**/*.ts": [
+    "cd packages/infrastructure && eslint --cache --fix",
+    "prettier --write"
+  ]
 }

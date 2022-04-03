@@ -1,38 +1,38 @@
 {
-    "name": "@app/lambda",
-    "version": "1.0.0",
-    "private": true,
-    "description": "App Lambdas",
-    "dependencies": {
-        "@prisma/client": "^3.11.1",
-        "aws-lambda-fastify": "^2.1.2",
-        "fastify": "^3.21.3",
-        "fastify-cors": "^6.0.2",
-        "graphql": "^16.3.0",
-        "graphql-relay": "^0.10.0",
-        "mercurius": "^9.3.6",
-        "nexus": "^1.1.0",
-        "nexus-prisma": "^0.35.0"
-    },
-    "devDependencies": {
-        "@types/aws-lambda": "^8.10.93",
-        "dotenv-cli": "^5.1.0",
-        "prisma": "^3.11.1",
-        "ts-node-dev": "^1.1.8"
-    },
-    "scripts": {
-        "test": "jest",
-        "lint": "eslint --ext ts .",
-        "format": "prettier --write \"**/*.ts\" \"**/*.graphql\"",
-        "start": "dotenv -e .env.local -- tsnd --poll --transpile-only --no-notify ./src/app.ts",
-        "prisma:gen": "npx prisma generate",
-        "prisma:migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
-        "prisma:migrate:local": "dotenv -e .env.local -- npx prisma migrate dev",
-        "prisma:deploy": "dotenv -e .env.prod -- npx prisma migrate deploy",
-        "prisma:save:dev": "dotenv -e .env.dev -- npm run prisma:migrate:dev -- --create-only",
-        "prisma:save:local": "dotenv -e .env.local -- npm run prisma:migrate:dev -- --create-only",
-        "nexus:gen": "npx esno src/graphql/index.ts",
-        "nexus-prisma:gen": "npm run nexus:gen && npm run prisma:gen && npm run format",
-        "typecheck": "tsc"
-    }
+  "name": "@app/lambda",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App Lambdas",
+  "dependencies": {
+    "@prisma/client": "^3.11.1",
+    "aws-lambda-fastify": "^2.1.2",
+    "fastify": "^3.21.3",
+    "fastify-cors": "^6.0.2",
+    "graphql": "^16.3.0",
+    "graphql-relay": "^0.10.0",
+    "mercurius": "^9.3.6",
+    "nexus": "^1.1.0",
+    "nexus-prisma": "^0.35.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.93",
+    "dotenv-cli": "^5.1.0",
+    "prisma": "^3.11.1",
+    "ts-node-dev": "^1.1.8"
+  },
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint --ext ts .",
+    "format": "prettier --write \"**/*.ts\" \"**/*.graphql\"",
+    "start": "dotenv -e .env.local -- tsnd --poll --transpile-only --no-notify ./src/app.ts",
+    "prisma:gen": "npx prisma generate",
+    "prisma:migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
+    "prisma:migrate:local": "dotenv -e .env.local -- npx prisma migrate dev",
+    "prisma:deploy": "dotenv -e .env.prod -- npx prisma migrate deploy",
+    "prisma:save:dev": "dotenv -e .env.dev -- npm run prisma:migrate:dev -- --create-only",
+    "prisma:save:local": "dotenv -e .env.local -- npm run prisma:migrate:dev -- --create-only",
+    "nexus:gen": "npx esno src/graphql/index.ts",
+    "nexus-prisma:gen": "npm run nexus:gen && npm run prisma:gen && npm run format",
+    "typecheck": "tsc"
+  }
 }

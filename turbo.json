@@ -1,38 +1,38 @@
 {
-    "$schema": "https://turborepo.org/schema.json",
-    "pipeline": {
-        "build": {
-            "dependsOn": ["^build"],
-            "outputs": ["build/**"]
-        },
-        "test": {
-            "dependsOn": ["^build"],
-            "outputs": []
-        },
-        "lint": {
-            "outputs": []
-        },
-        "format": {
-            "outputs": []
-        },
-        "synth:dev": {
-            "dependsOn": ["build"],
-            "outputs": []
-        },
-        "synth:prod": {
-            "dependsOn": ["build"],
-            "outputs": []
-        },
-        "deploy:dev": {
-            "dependsOn": ["lint", "test", "build"],
-            "outputs": []
-        },
-        "deploy:prod": {
-            "dependsOn": ["lint", "test", "build"],
-            "outputs": []
-        },
-        "dev": {
-            "cache": false
-        }
+  "$schema": "https://turborepo.org/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "lint": {
+      "outputs": []
+    },
+    "format": {
+      "outputs": []
+    },
+    "synth:dev": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "synth:prod": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "deploy:dev": {
+      "dependsOn": ["lint", "test", "build"],
+      "outputs": []
+    },
+    "deploy:prod": {
+      "dependsOn": ["lint", "test", "build"],
+      "outputs": []
+    },
+    "dev": {
+      "cache": false
     }
+  }
 }

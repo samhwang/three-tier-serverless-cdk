@@ -1,21 +1,21 @@
 import { RequestParameters, Variables } from 'relay-runtime';
 
 const fetchGraphQL = async (
-    query: RequestParameters['text'],
-    variables: Variables
+  query: RequestParameters['text'],
+  variables: Variables
 ) => {
-    const response = await fetch('/api/graphql', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query,
-            variables,
-        }),
-    });
+  const response = await fetch('/api/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables,
+    }),
+  });
 
-    return response.json();
+  return response.json();
 };
 
 export default fetchGraphQL;
