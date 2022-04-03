@@ -3,5 +3,5 @@
     "compilerOptions": {
         "outDir": "./build"
     },
-    "include": ["./bin", "./lib"]
+    "include": ["./bin", "./lib", "jest.config.ts", "./scripts"]
 }

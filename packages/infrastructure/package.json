@@ -18,7 +18,7 @@
     },
     "scripts": {
         "test": "jest",
-        "lint": "eslint --ext ts lib bin",
+        "lint": "eslint --ext ts lib bin scripts",
         "format": "prettier --write \"**/*.ts\"",
         "synth:dev": "ENV=dev cdk synth --no-staging > template.yml",
         "synth:prod": "ENV=prod cdk synth --no-staging > template.yml",

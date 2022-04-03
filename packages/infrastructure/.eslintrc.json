@@ -1,0 +1,9 @@
+{
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "no-new": "off",
+        "no-useless-constructor": "off"
+    }
+}
