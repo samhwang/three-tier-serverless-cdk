@@ -1,14 +1,6 @@
-import { execSync, ExecSyncOptions } from 'child_process';
 import path from 'path';
-import fs from 'fs';
 import { Construct } from 'constructs';
-import {
-    CfnOutput,
-    DockerImage,
-    RemovalPolicy,
-    Stack,
-    StackProps,
-} from 'aws-cdk-lib';
+import { CfnOutput, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import {
@@ -108,31 +100,14 @@ export default class AppClientStack extends CustomStack {
             }
         );
 
-        const execOptions: ExecSyncOptions = {
-            stdio: ['ignore', process.stderr, 'inherit'],
-        };
-
-        const clientPath = path.resolve(__dirname, '..', '..', 'frontend');
-        const clientBundle = Source.asset(clientPath, {
-            bundling: {
-                image: DockerImage.fromRegistry('node:14'),
-                local: {
-                    tryBundle(outputDir: string): boolean {
-                        try {
-                            execSync('npx vite build', execOptions);
-                            fs.copyFileSync(
-                                path.resolve('..', 'build'),
-                                outputDir
-                            );
-                            return true;
-                        } catch (error: any) {
-                            console.error(error);
-                            return false;
-                        }
-                    },
-                },
-            },
-        });
+        const clientPath = path.resolve(
+            __dirname,
+            '..',
+            '..',
+            'frontend',
+            'build'
+        );
+        const clientBundle = Source.asset(clientPath);
 
         new BucketDeployment(this, 'DeployWithInvalidation', {
             sources: [clientBundle],
