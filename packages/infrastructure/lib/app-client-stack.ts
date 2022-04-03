@@ -20,19 +20,19 @@ import {
     ViewerProtocolPolicy,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha';
+import CustomStack from './custom-stack';
 
 interface ClientProps extends StackProps {
     httpApiId: HttpApi['apiId'];
+    apiUrlSuffix: Stack['urlSuffix'];
 }
 
-export default class AppClientStack extends Stack {
+export default class AppClientStack extends CustomStack {
     constructor(scope: Construct, id: string, props: ClientProps) {
         super(scope, id, props);
 
-        const stage = props.tags?.stage || 'dev';
-
-        const siteBucket = new Bucket(this, `AppFEBucket-${stage}`, {
-            bucketName: `app-frontend-bucket-${stage}`,
+        const siteBucket = new Bucket(this, `AppFEBucket-${this.stage}`, {
+            bucketName: `app-frontend-bucket-${this.stage}`,
             websiteIndexDocument: 'index.html',
             websiteErrorDocument: 'index.html',
             removalPolicy: RemovalPolicy.DESTROY,
@@ -46,7 +46,7 @@ export default class AppClientStack extends Stack {
 
         const cfDistribution = new CloudFrontWebDistribution(
             this,
-            `AppDistribution-${stage}`,
+            `AppDistribution-${this.stage}`,
             {
                 originConfigs: [
                     {
@@ -79,8 +79,8 @@ export default class AppClientStack extends Stack {
                     },
                     {
                         customOriginSource: {
-                            domainName: `${props.httpApiId}.execute-api.${this.region}.${this.urlSuffix}`,
-                            originPath: `/${stage}`,
+                            domainName: `${props.httpApiId}.execute-api.${this.region}.${props.apiUrlSuffix}`,
+                            originPath: `/${this.stage}`,
                         },
                         behaviors: [
                             {

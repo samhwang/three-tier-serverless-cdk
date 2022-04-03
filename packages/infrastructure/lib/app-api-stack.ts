@@ -1,6 +1,6 @@
 import path from 'path';
 import { Construct } from 'constructs';
-import { CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { CfnOutput, Duration, StackProps } from 'aws-cdk-lib';
 import {
     CorsHttpMethod,
     HttpApi,
@@ -14,6 +14,7 @@ import {
 } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { ServerlessCluster } from 'aws-cdk-lib/aws-rds';
 import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
+import CustomStack from './custom-stack';
 
 interface BackendProps extends StackProps {
     databaseCluster: ServerlessCluster;
@@ -26,19 +27,15 @@ interface FunctionProps {
     options?: NodejsFunctionProps;
 }
 
-export default class AppApiStack extends Stack {
+export default class AppApiStack extends CustomStack {
     private readonly apiInstance: HttpApi;
 
     private readonly auroraCluster: ServerlessCluster;
 
     private readonly dbSecret: string;
 
-    private readonly stage: string;
-
     constructor(scope: Construct, id: string, props: BackendProps) {
         super(scope, id, props);
-
-        this.stage = props.tags?.stage || 'dev';
 
         this.auroraCluster = props.databaseCluster;
         this.dbSecret = Secret.fromSecretCompleteArn(

@@ -1,4 +1,4 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { StackProps } from 'aws-cdk-lib';
 import {
     InterfaceVpcEndpoint,
     InterfaceVpcEndpointAwsService,
@@ -8,18 +8,15 @@ import {
     Vpc,
 } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
+import CustomStack from './custom-stack';
 
-export default class AppNetworkStack extends Stack {
-    private readonly stage: string;
-
+export default class AppNetworkStack extends CustomStack {
     private readonly appVpc: Vpc;
 
     private readonly privateSecurityGroup: SecurityGroup;
 
     constructor(scope: Construct, id: string, props: StackProps) {
         super(scope, id, props);
-
-        this.stage = props.tags?.stage || 'dev';
 
         this.appVpc = this.generateVPC();
 
