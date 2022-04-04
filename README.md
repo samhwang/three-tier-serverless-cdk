@@ -1,22 +1,20 @@
-# CDK TypeScript Node GraphQL React Template
+# Three Tier Serverless CDK Template
 
 ## The Project
 
-This template will spin up and bootstrap an application stack on AWS using AWS CDK.
-
-- Backend
-  - Node TypeScript
+This template will spin up and bootstrap an application with 3 stacks on AWS:
+- Backend/API Stack:
+  - Node + TypeScript
   - Fastify
   - Mercurius GraphQL Plugin
   - GraphQL Nexus
   - Prisma ORM
-- Frontend
+- Frontend Stack:
   - React TypeScript
   - GraphQL Relay
-- Infrastructure
-  - AWS CDK
-  - AWS Aurora Serverless PostgreSQL
-- Managed by Turborepo
+- Infrastructure Stacks:
+  - AWS Aurora Serverless (with PostgreSQL compatibility)
+- Managed by Turborepo and deployed with AWS CDK.
 
 ## Bootstrapping process
 
@@ -50,7 +48,7 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 ### Install
 
 ```shell
-git clone git@github.com:samhwang/cdk-ts-node-lambda-react-graphql.git
+git clone git@github.com:samhwang/three-tier-serverless-cdk.git
 npm install
 ```
 

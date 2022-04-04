@@ -1,5 +1,5 @@
 {
-  "name": "cdk-ts-node-lambda-react-graphql",
+  "name": "three-tier-serverless-cdk",
   "version": "0.1.0",
   "author": "samhwang",
   "packageManager": "npm@8.6.0",
