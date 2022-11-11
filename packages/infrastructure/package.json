@@ -17,7 +17,7 @@
     "aws-cdk": "^2.50.0"
   },
   "scripts": {
-    "test": "jest",
+    "test": "vitest run",
     "lint": "eslint --ext ts lib bin scripts",
     "format": "prettier --write \"**/*.ts\"",
     "synth:dev": "ENV=dev cdk synth --no-staging --all",
