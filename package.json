@@ -2,14 +2,10 @@
   "name": "three-tier-serverless-cdk",
   "version": "0.1.0",
   "author": "samhwang",
-  "packageManager": "npm@8.6.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "engines": {
-    "node": "^14.0.0",
-    "npm": ">=7.0.0"
+    "node": "^16.0.0",
+    "pnpm": ">=7.0.0"
   },
   "scripts": {
     "prepare": "husky install",
