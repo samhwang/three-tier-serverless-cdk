@@ -31,9 +31,9 @@ When deployed, this stack will:
 
 ## Requirements
 
-- [Node 14](https://nodejs.org/en/download/ "Node URL")
-  - NPM 8 (Usually bundled with Node. If you're not on v8, run `npm install -g npm@8`)
-  - [Typescript 4.4+](https://www.typescriptlang.org/download "TS URL")
+- [Node 16](https://nodejs.org/en/download/ "Node URL")
+  - PNPM 7
+  - [Typescript 4.8](https://www.typescriptlang.org/download "TS URL")
 - AWS Tools
   - [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/cli.html "AWS CDK URL")
   - [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html "AWS SAM URL")
@@ -49,23 +49,23 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 ```shell
 git clone git@github.com:samhwang/three-tier-serverless-cdk.git
-npm install
+pnpm install
 ```
 
 ### Running the backend lambda locally
 
 ```shell
 cd packages/lambda
-npm run start
+pnpm start
 ```
 
 ### Testing the API Locally with SAM (to verify after cdk synth)
 
 ```shell
-npm run synth:dev # For dev stage
+pnpm synth:dev # For dev stage
 sam local start-api --port 5000
 
-npm run synth:prod # For prod stage
+pnpm run synth:prod # For prod stage
 sam local start-api --port 5000
 ```
 
@@ -73,12 +73,12 @@ sam local start-api --port 5000
 
 ```shell
 cd packages/frontend
-npm run start
+pnpm run start
 ```
 
 ## Useful commands
 
-- `npm run test` perform the jest unit tests
+- `npm run test` perform the unit tests
 - `cdk deploy` deploy this stack to your default AWS account/region
 - `cdk diff` compare deployed stack with current state
 - `cdk synth` emits the synthesized CloudFormation template

@@ -9,12 +9,7 @@ export default defineConfig({
       '/api': 'http://localhost:5000',
     },
   },
-  plugins: [
-    react({
-      exclude: /\.test\.(t|j)sx?$/,
-    }),
-    relay,
-  ],
+  plugins: [react(), relay],
   build: {
     outDir: 'build',
   },

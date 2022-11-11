@@ -9,7 +9,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "import", "prettier"],
+  "plugins": ["@typescript-eslint", "import"],
   "rules": {
     "default-case": "off",
     "import/extensions": ["error", "never"],
@@ -17,8 +17,6 @@
     "@typescript-eslint/no-unused-vars": "off",
     "import/no-extraneous-dependencies": "off",
     "no-use-before-define": ["error", "nofunc"],
-    "import/prefer-default-export": "off",
-    "prettier/prettier": "error",
-    "import/no-relative-packages": "off"
+    "import/prefer-default-export": "off"
   }
 }

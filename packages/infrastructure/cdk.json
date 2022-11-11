@@ -1,5 +1,5 @@
 {
-  "app": "npx esno bin/app.ts",
+  "app": "tsx bin/app.ts",
   "watch": {
     "include": ["**"],
     "exclude": [
