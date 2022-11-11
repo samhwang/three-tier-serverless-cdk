@@ -21,7 +21,7 @@
     "ts-node-dev": "^2.0.0"
   },
   "scripts": {
-    "test": "jest",
+    "test": "vitest run",
     "lint": "eslint --ext ts .",
     "format": "prettier --write \"**/*.ts\" \"**/*.graphql\"",
     "start": "dotenv -e .env.local -- tsnd --poll --transpile-only --no-notify ./src/app.ts",

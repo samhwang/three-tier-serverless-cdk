@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "./build"
   },
-  "include": ["./src", "jest.config.ts"]
+  "include": ["./src", "vitest.config.ts"]
 }
