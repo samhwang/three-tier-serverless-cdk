@@ -6,7 +6,7 @@ import App from './components/App';
 
 async function renderRoot() {
   if (import.meta.env.DEV) {
-    const { worker } = await import('./mocks/browser');
+    const { worker } = await import('./__mocks__/browser');
     worker.start();
   }
 

@@ -14,10 +14,10 @@ const fetchRelay = (params: RequestParameters, variables: Variables) => {
   );
   return fetchGraphQL(params.text, variables);
 };
+const network = Network.create(fetchRelay);
 
 const recordSource = new RecordSource();
 const store = new Store(recordSource);
-const network = Network.create(fetchRelay);
 
 const environment = new Environment({
   network,

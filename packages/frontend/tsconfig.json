@@ -12,7 +12,6 @@
   "include": [
     "./src",
     "./utils",
-    "jest.config.ts",
     "vite.config.ts",
     "relay.config.js"
   ],
